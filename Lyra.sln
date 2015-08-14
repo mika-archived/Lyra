@@ -5,6 +5,13 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyra", "Lyra\Lyra.csproj", "{E95CEA54-1B99-4DB3-B333-5965D7FA4D78}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{20BFA6D6-7819-4CE4-BD23-DEC0E42CDECB}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.config = .nuget\NuGet.config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
