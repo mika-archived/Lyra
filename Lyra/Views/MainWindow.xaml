@@ -1,38 +1,46 @@
-﻿<Window x:Class="Lyra.Views.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
-        xmlns:v="clr-namespace:Lyra.Views"
-        xmlns:vm="clr-namespace:Lyra.ViewModels"
-        Title="MainWindow" Height="350" Width="525">
-    
+﻿<metro:MetroWindow x:Class="Lyra.Views.MainWindow"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+                   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                   xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+                   xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
+                   xmlns:v="clr-namespace:Lyra.Views"
+                   xmlns:vm="clr-namespace:Lyra.ViewModels"
+                   Title="MainWindow"
+                   Width="525"
+                   Height="350">
     <Window.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Window.DataContext>
-    
+
     <i:Interaction.Triggers>
-    
-    	<!--Viewに特別な要件が存在しない限りは、トリガーやアクションの自作にこだわらず積極的にコードビハインドを使いましょう -->
-    	<!--Viewのコードビハインドは、基本的にView内で完結するロジックとViewModelからのイベントの受信(専用リスナを使用する)に限るとトラブルが少なくなります -->
-    	<!--Livet1.1からはコードビハインドでViewModelのイベントを受信するためのWeakEventLisnterサポートが追加されています --> 
-        
-        <!--WindowのContentRenderedイベントのタイミングでViewModelのInitializeメソッドが呼ばれます-->
         <i:EventTrigger EventName="ContentRendered">
-            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize"/>
+            <l:LivetCallMethodAction MethodName="Initialize" MethodTarget="{Binding}" />
         </i:EventTrigger>
-
-        <!--Windowが閉じたタイミングでViewModelのDisposeメソッドが呼ばれます-->
         <i:EventTrigger EventName="Closed">
-            <l:DataContextDisposeAction/>
+            <l:DataContextDisposeAction />
         </i:EventTrigger>
-
-        <!--WindowのCloseキャンセル処理に対応する場合は、WindowCloseCancelBehaviorの使用を検討してください-->
-
     </i:Interaction.Triggers>
-    
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DockPanel x:Name="captionBar" metro:MetroWindow.IsCaptionBar="True">
+            <Image Source="../Resources/icon.png" Style="{DynamicResource CaptionIconStyle}" />
+            <TextBlock Style="{DynamicResource CaptionTextStyle}" Text="{Binding Title}" />
+
+            <StackPanel HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                <metro:SystemButtons />
+            </StackPanel>
+        </DockPanel>
     </Grid>
-</Window>
+</metro:MetroWindow>
