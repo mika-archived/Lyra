@@ -1,0 +1,148 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="SliderRepeatButtonRight" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Height="Auto"
+                            Background="#00FFFFFF"
+                            BorderThickness="1" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderRepeatButtonLeft" TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Height="5"
+                            Background="{StaticResource HighlightBackgroundBrushKey}"
+                            BorderBrush="#FFD6D6D6"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SliderThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid>
+                        <!--  Default  -->
+                        <Path HorizontalAlignment="Center"
+                              Data="M0,0C0,0 11,0 11,0 11,0 11,18 11,18 11,18 0,18 0,18 0,18 0,0 0,0z"
+                              Fill="#FFF0F0F0"
+                              RenderSize="11,18"
+                              SnapsToDevicePixels="True"
+                              Stretch="Fill"
+                              Stroke="#FFACACAC"
+                              StrokeThickness="1" />
+                        <!--
+                        <Ellipse Width="16"
+                                 Height="16"
+                                 HorizontalAlignment="Center"
+                                 Fill="Transparent"
+                                 SnapsToDevicePixels="True"
+                                 Stroke="#FFACACAC"
+                                 StrokeThickness="3" />
+                        -->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="TrackBarA" TargetType="{x:Type Slider}">
+        <Grid>
+            <Border x:Name="TrackBackground"
+                    Height="5"
+                    VerticalAlignment="Center"
+                    Background="Black"
+                    BorderBrush="#FFD6D6D6"
+                    BorderThickness="1" />
+            <Track x:Name="PART_Track">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton x:Name="RepeatButtonLeft"
+                                  Command="Slider.DecreaseLarge"
+                                  Style="{StaticResource SliderRepeatButtonLeft}" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb x:Name="Thumb"
+                           Width="11"
+                           Height="18"
+                           Style="{StaticResource SliderThumb}"
+                           Visibility="Collapsed" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Command="Slider.IncreaseLarge" Style="{StaticResource SliderRepeatButtonRight}" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Thumb" Property="Visibility" Value="Visible" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="TrackBarB" TargetType="{x:Type Slider}">
+        <Grid>
+            <Border x:Name="TrackBackground"
+                    Height="5"
+                    VerticalAlignment="Center"
+                    Background="Black"
+                    BorderBrush="#FFD6D6D6"
+                    BorderThickness="1" />
+            <Track x:Name="PART_Track">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton x:Name="RepeatButtonLeft"
+                                  Command="Slider.DecreaseLarge"
+                                  Style="{StaticResource SliderRepeatButtonLeft}" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb x:Name="Thumb"
+                           Width="11"
+                           Height="18"
+                           Style="{StaticResource SliderThumb}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Command="Slider.IncreaseLarge" Style="{StaticResource SliderRepeatButtonRight}" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="HorizontalTrackBarA" TargetType="{x:Type Slider}">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Template" Value="{StaticResource TrackBarA}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HorizontalTrackBarB" TargetType="{x:Type Slider}">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Template" Value="{StaticResource TrackBarB}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

@@ -125,7 +125,8 @@
                             Grid.Column="2"
                             HorizontalAlignment="Stretch"
                             Maximum="100"
-                            Minimum="0" />
+                            Minimum="0"
+                            Style="{StaticResource HorizontalTrackBarA}" />
                     <!--  #endregion  -->
                 </Grid>
 
@@ -136,6 +137,7 @@
                             VerticalAlignment="Center"
                             Maximum="100"
                             Minimum="0"
+                            Style="{StaticResource HorizontalTrackBarB}"
                             Ticks="1" />
                     <Button>&#xE1CD;</Button>
                     <!--  repeat once  -->
