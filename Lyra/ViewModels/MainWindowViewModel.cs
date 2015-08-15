@@ -4,28 +4,14 @@ namespace Lyra.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
-        #region Title変更通知プロパティ
+        public string Title => "Lyra";
 
-        private string _Title;
-
-        public string Title
+        public MainWindowViewModel()
         {
-            get
-            { return _Title; }
-            set
-            {
-                if (_Title == value)
-                    return;
-                _Title = value;
-                RaisePropertyChanged();
-            }
         }
-
-        #endregion Title変更通知プロパティ
 
         public void Initialize()
         {
-            this.Title = "Lyra";
         }
     }
 }
