@@ -8,8 +8,9 @@
                    xmlns:v="clr-namespace:Lyra.Views"
                    xmlns:vm="clr-namespace:Lyra.ViewModels"
                    Title="MainWindow"
-                   Width="525"
-                   Height="350">
+                   Width="920"
+                   Height="480"
+                   MinWidth="600">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
@@ -27,11 +28,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="23" />
         </Grid.RowDefinitions>
 
-        <DockPanel x:Name="captionBar" metro:MetroWindow.IsCaptionBar="True">
-            <Image Source="../Resources/icon.png" Style="{DynamicResource CaptionIconStyle}" />
+        <!--  #region CaptionBar  -->
+        <DockPanel Grid.Row="0" metro:MetroWindow.IsCaptionBar="True">
+            <metro:CaptionIcon>
+                <Image Source="../Resources/icon.png" Style="{DynamicResource CaptionIconStyle}" />
+            </metro:CaptionIcon>
             <TextBlock Style="{DynamicResource CaptionTextStyle}" Text="{Binding Title}" />
 
             <StackPanel HorizontalAlignment="Right"
@@ -42,5 +46,114 @@
                 <metro:SystemButtons />
             </StackPanel>
         </DockPanel>
+        <!--  #endregion  -->
+
+        <!--  #region Main Control  -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.Resources>
+                    <Style BasedOn="{StaticResource SymbolButtonStyle}" TargetType="{x:Type Button}">
+                        <Setter Property="Height" Value="48" />
+                        <Setter Property="Width" Value="48" />
+                        <Setter Property="FontSize" Value="24" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button>&#xE100;</Button>
+                    <Button>&#xE102;</Button>
+                    <!--  pause  -->
+                    <!--<Button>&#xE103;</Button>-->
+                    <Button>&#xE91F;</Button>
+                    <Button>&#xE101;</Button>
+                </StackPanel>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Row="0"
+                           Grid.RowSpan="2"
+                           Grid.Column="0"
+                           Width="48"
+                           Height="48" />
+
+                    <!--  #region track  -->
+                    <Grid Grid.Row="0" Grid.Column="2">
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="FontSize" Value="16" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="Margin" Value="0,0,5,0" />
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis">
+                            <Run>track</Run>
+                            <Run>(artist, album)</Run>
+                        </TextBlock>
+
+                        <TextBlock Grid.Column="1">
+                            <Run>current</Run>
+                            <Run>/</Run>
+                            <Run>duration</Run>
+                        </TextBlock>
+                    </Grid>
+
+                    <Slider Grid.Row="1"
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            Maximum="100"
+                            Minimum="0" />
+                    <!--  #endregion  -->
+                </Grid>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <!--  when button clicked, mute sound  -->
+                    <Button>&#xE15D;</Button>
+                    <Slider Width="100"
+                            VerticalAlignment="Center"
+                            Maximum="100"
+                            Minimum="0"
+                            Ticks="1" />
+                    <Button>&#xE1CD;</Button>
+                    <!--  repeat once  -->
+                    <!-- <Button>&#xE1CC;</Button> -->
+                    <Button>&#xE14B;</Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <!--  #endregion  -->
+
+        <!--  #region StatusBar  -->
+        <Grid Grid.Row="2" Background="{DynamicResource AccentBrushKey}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <metro:ResizeGrip Grid.Column="1" />
+        </Grid>
+        <!--  #endregion  -->
     </Grid>
 </metro:MetroWindow>
