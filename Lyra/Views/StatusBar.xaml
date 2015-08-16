@@ -16,6 +16,7 @@
         <TextBlock Grid.Column="0"
                    Margin="5,0"
                    Style="{DynamicResource DefaultTextStyle}"
+                   Foreground="{DynamicResource AccentForegroundBrushKey}"
                    Text="準備完了" />
     </Grid>
 </UserControl>

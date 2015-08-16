@@ -9,7 +9,6 @@
                    xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
                    xmlns:v="clr-namespace:Lyra.Views"
                    xmlns:vm="clr-namespace:Lyra.ViewModels"
-                   Title="MainWindow"
                    Width="920"
                    Height="480"
                    MinWidth="600"
@@ -151,7 +150,8 @@
                     Background="{DynamicResource BackgroundBrushKey}"
                     BorderBrush="{DynamicResource BorderBrushKey}"
                     BorderThickness="1">
-                <ListView>
+                <ListView ItemsSource="{Binding Tracks}"
+                          AlternationCount="2">
                     <ListView.Resources>
                         <!--  Default Style  -->
                         <Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
@@ -235,15 +235,89 @@
                             </Style.Triggers>
                         </Style>
                     </ListView.Resources>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Background" Value="{DynamicResource ActiveBackgroundBrushKey}"></Setter>
+                            <Setter Property="OverridesDefaultStyle" Value="True" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderThickness="0,0,0,1"
+                                                BorderBrush="{DynamicResource ActiveBorderBrushKey}">
+                                            <GridViewRowPresenter Margin="0,2" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="{DynamicResource SemiactiveBackgroundBrushKey}" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource BackgroundBrushKey}"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="35" Header="Info" />
-                            <GridViewColumn Width="35" Header="番号" />
-                            <GridViewColumn Width="250" Header="タイトル" />
-                            <GridViewColumn Width="180" Header="アーティスト" />
-                            <GridViewColumn Width="250" Header="アルバム" />
-                            <GridViewColumn Width="70" Header="長さ" />
-                            <GridViewColumn Width="95" Header="Stat" />
+                            <GridViewColumn Width="35" Header="Info">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Info}"
+                                                   Style="{StaticResource DefaultTextStyle}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="35" Header="番号">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Number}"
+                                                   Style="{StaticResource DefaultTextStyle}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="250" Header="タイトル">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Title}"
+                                                   Style="{StaticResource DefaultTextStyle}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="180" Header="アーティスト">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Artist}"
+                                                   Style="{StaticResource DefaultTextStyle}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="250" Header="アルバム">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Album}"
+                                                   Style="{StaticResource DefaultTextStyle}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="70" Header="時間">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Duration}"
+                                                   Style="{StaticResource DefaultTextStyle}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="95" Header="Status">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Status}"
+                                                   Style="{StaticResource DefaultTextStyle}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>
