@@ -17,7 +17,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Foreground" Value="{StaticResource SymbolButtonBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SymbolButtonBrush}" />
         <Style.Triggers>
             <EventTrigger RoutedEvent="MouseEnter">
                 <BeginStoryboard>

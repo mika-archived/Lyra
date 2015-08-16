@@ -154,6 +154,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <v:StatusBar Grid.Column="0" />
             <metro:ResizeGrip Grid.Column="1" />
         </Grid>
         <!--  #endregion  -->
