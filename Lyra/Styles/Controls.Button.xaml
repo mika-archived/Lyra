@@ -1,4 +1,6 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls">
     <Style x:Key="SymbolButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="FontFamily">
             <Setter.Value>
@@ -86,5 +88,14 @@
                 </BeginStoryboard>
             </EventTrigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CaptionButtonStyle" TargetType="{x:Type metro:CaptionButton}">
+        <Setter Property="FontFamily">
+            <Setter.Value>
+                <!--  Segoe MDL2 Assets is available on Windows 10. Segoe UI Symbol for Windows 8/8.1 (Legacy)  -->
+                <FontFamily>Segoe MDL2 Assets, Segoe UI Symbol</FontFamily>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>
