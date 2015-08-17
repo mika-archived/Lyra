@@ -39,6 +39,7 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bass.Net, Version=2.4.11.1, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL" />
     <Reference Include="Livet">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>InfrastructureAssemblies\Livet.dll</HintPath>
@@ -83,6 +84,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Audio\BassPlayer.cs" />
+    <Compile Include="Models\Audio\IAudioPlayer.cs" />
+    <Compile Include="Models\LyraApp.cs" />
     <Compile Include="Models\Track.cs" />
     <Compile Include="Models\TrackInfo.cs" />
     <Compile Include="Models\TrackState.cs" />

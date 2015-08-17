@@ -8,6 +8,7 @@ namespace Lyra.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
+        // ReSharper disable once MemberCanBeMadeStatic.Global
         public string Title => "Lyra";
 
         #region Tracks変更通知プロパティ

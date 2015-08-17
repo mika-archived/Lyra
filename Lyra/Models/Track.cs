@@ -7,6 +7,25 @@ namespace Lyra.Models
     /// </summary>
     public class Track : NotificationObject
     {
+        #region Id変更通知プロパティ
+
+        private int _Id;
+
+        public int Id
+        {
+            get
+            { return _Id; }
+            set
+            {
+                if (_Id == value)
+                    return;
+                _Id = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
         #region Info変更通知プロパティ
 
         private TrackInfo _Info;
@@ -155,6 +174,25 @@ namespace Lyra.Models
                 if (_Status == value)
                     return;
                 _Status = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region FilePath変更通知プロパティ
+
+        private string _FilePath;
+
+        public string FilePath
+        {
+            get
+            { return _FilePath; }
+            set
+            {
+                if (_FilePath == value)
+                    return;
+                _FilePath = value;
                 RaisePropertyChanged();
             }
         }
