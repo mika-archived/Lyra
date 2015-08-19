@@ -60,98 +60,15 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.Resources>
-                    <Style BasedOn="{StaticResource SymbolButtonStyle}" TargetType="{x:Type Button}">
-                        <Setter Property="Height" Value="48" />
-                        <Setter Property="Width" Value="48" />
-                        <Setter Property="FontSize" Value="24" />
-                    </Style>
-                </Grid.Resources>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <v:PlayerControl Grid.Row="0" DataContext="{Binding PlayerControlViewModel}" />
 
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <Button Content="&#xE100;" />
-                    <Button Content="&#xE102;" />
-                    <!--  pause  -->
-                    <!--<Button>&#xE103;</Button>-->
-                    <Button Content="&#xE91F;" />
-                    <Button Content="&#xE101;" />
-                </StackPanel>
-
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="48" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Image Grid.Row="0"
-                           Grid.RowSpan="2"
-                           Grid.Column="0"
-                           Width="48"
-                           Height="48"
-                           Source="../Resources/bg.png" />
-
-                    <!--  #region track  -->
-                    <Grid Grid.Row="0" Grid.Column="2">
-                        <Grid.Resources>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="FontSize" Value="16" />
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                                <Setter Property="Margin" Value="0,0,5,0" />
-                            </Style>
-                        </Grid.Resources>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis"><Run Text="track" /><Run Text=" " /><Run Text="(artist, album)" />
-                        </TextBlock>
-
-                        <TextBlock Grid.Column="1"><Run Text="current" /><Run Text=" " /><Run Text="/" /><Run Text=" " /><Run Text="duration" />
-                        </TextBlock>
-                    </Grid>
-
-                    <Slider Grid.Row="1"
-                            Grid.Column="2"
-                            HorizontalAlignment="Stretch"
-                            Maximum="100"
-                            Minimum="0"
-                            Style="{StaticResource HorizontalTrackBarA}" />
-                    <!--  #endregion  -->
-                </Grid>
-
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <!--  when button clicked, mute sound  -->
-                    <Button Content="&#xE15D;" />
-                    <Slider Width="100"
-                            VerticalAlignment="Center"
-                            Maximum="100"
-                            Minimum="0"
-                            Style="{StaticResource HorizontalTrackBarB}"
-                            Ticks="1" />
-                    <Button Content="&#xE1CD;" />
-                    <!--  repeat once  -->
-                    <!-- <Button>&#xE1CC;</Button> -->
-                    <Button Content="&#xE14B;" />
-                </StackPanel>
-            </Grid>
             <Border Grid.Row="1"
                     Background="{DynamicResource BackgroundBrushKey}"
                     BorderBrush="{DynamicResource BorderBrushKey}"
                     BorderThickness="1">
                 <ListView ItemsSource="{Binding Tracks}"
-                          AlternationCount="2">
+                          AlternationCount="2"
+                          SelectedItem="{Binding SelectedTrack, Mode=TwoWay}">
                     <ListView.Resources>
                         <!--  Default Style  -->
                         <Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
@@ -261,11 +178,11 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                     <ListView.View>
-                        <GridView>
+                        <GridView d:DataContext="{d:DesignInstance vm:TrackViewModel}">
                             <GridViewColumn Width="35" Header="Info">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Info}"
+                                        <TextBlock Text="{Binding Track.Info}"
                                                    Style="{StaticResource DefaultTextStyle}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -273,7 +190,7 @@
                             <GridViewColumn Width="35" Header="番号">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Number}"
+                                        <TextBlock Text="{Binding Track.Number}"
                                                    Style="{StaticResource DefaultTextStyle}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -281,7 +198,7 @@
                             <GridViewColumn Width="250" Header="タイトル">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Title}"
+                                        <TextBlock Text="{Binding Track.Title}"
                                                    Style="{StaticResource DefaultTextStyle}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -289,7 +206,7 @@
                             <GridViewColumn Width="180" Header="アーティスト">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Artist}"
+                                        <TextBlock Text="{Binding Track.Artist}"
                                                    Style="{StaticResource DefaultTextStyle}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -297,7 +214,7 @@
                             <GridViewColumn Width="250" Header="アルバム">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Album}"
+                                        <TextBlock Text="{Binding Track.Album}"
                                                    Style="{StaticResource DefaultTextStyle}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -313,7 +230,7 @@
                             <GridViewColumn Width="95" Header="Status">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Status}"
+                                        <TextBlock Text="{Binding Track.Status}"
                                                    Style="{StaticResource DefaultTextStyle}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -331,7 +248,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <v:StatusBar Grid.Column="0" />
+            <v:StatusBar Grid.Column="0" DataContext="{Binding StatusBarViewModel}" />
             <metro:ResizeGrip Grid.Column="1" />
         </Grid>
         <!--  #endregion  -->

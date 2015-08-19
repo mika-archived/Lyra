@@ -1,0 +1,107 @@
+﻿<UserControl x:Class="Lyra.Views.PlayerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Lyra.Views"
+             xmlns:vm="clr-namespace:Lyra.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="48" d:DesignWidth="700"
+             d:DataContext="{d:DesignInstance vm:PlayerControlViewModel}">
+    <Grid>
+        <Grid.Resources>
+            <Style BasedOn="{StaticResource SymbolButtonStyle}" TargetType="{x:Type Button}">
+                <Setter Property="Height" Value="48" />
+                <Setter Property="Width" Value="48" />
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Orientation="Horizontal">
+            <Button Content="&#xE100;" Command="{Binding PreviousCommand}" />
+            <Button Content="&#xE102;" Command="{Binding PlayCommand}" />
+            <!--  pause  -->
+            <!--<Button>&#xE103;</Button>-->
+            <Button Content="&#xE91F;" Command="{Binding StopCommand}" />
+            <Button Content="&#xE101;" Command="{Binding NextCommand}" />
+        </StackPanel>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Row="0"
+                           Grid.RowSpan="2"
+                           Grid.Column="0"
+                           Width="48"
+                           Height="48"
+                           Source="../Resources/bg.png" />
+
+            <!--  #region track  -->
+            <Grid Grid.Row="0" Grid.Column="2">
+                <Grid.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="FontSize" Value="16" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="0,0,5,0" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis">
+                    <Run Text="{Binding PlayingTrack.Track.Title}" />
+                    <Run Text=" (" />
+                    <Run Text="{Binding PlayingTrack.Track.Artist}" />
+                    <Run Text="/" />
+                    <Run Text="{Binding PlayingTrack.Track.Album}" />
+                    <Run Text=")" />
+                </TextBlock>
+
+                <TextBlock Grid.Column="1">
+                    <Run Text="{Binding CurrentTime, Mode=OneWay}" />
+                    <Run Text=" / " />
+                    <Run Text="{Binding PlayingTrack.Duration, Mode=OneWay}" />
+                </TextBlock>
+            </Grid>
+
+            <Slider Grid.Row="1"
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            Maximum="{Binding PlayingTrack.Track.Duration}"
+                            Minimum="0"
+                            Value="{Binding CurrentDuration, Mode=OneWay}"
+                            Style="{StaticResource HorizontalTrackBarA}" />
+            <!--  #endregion  -->
+        </Grid>
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal">
+            <!--  when button clicked, mute sound  -->
+            <Button Content="&#xE15D;" />
+            <Slider Width="100"
+                            VerticalAlignment="Center"
+                            Maximum="100"
+                            Minimum="0"
+                            Style="{StaticResource HorizontalTrackBarB}"
+                            Ticks="1" />
+            <Button Content="&#xE1CD;" />
+            <!--  repeat once  -->
+            <!-- <Button>&#xE1CC;</Button> -->
+            <Button Content="&#xE14B;" />
+        </StackPanel>
+    </Grid>
+</UserControl>
