@@ -95,18 +95,27 @@ namespace Lyra.Models.Audio
         /// </summary>
         public PlayState PlayState { get; private set; }
 
+        //
+        private float _volume;
+
         /// <summary>
         /// 現在のボリュームを取得/設定します。
+        /// なお、音声が再生されていない場合は最後に設定した値が取得されます。
         /// </summary>
         public float Volume
         {
             get
             {
-                var volume = 0.0f;
+                var volume = this._volume;
                 Bass.BASS_ChannelGetAttribute(this._handle, BASSAttribute.BASS_ATTRIB_VOL, ref volume);
                 return volume;
             }
-            set { Bass.BASS_ChannelSetAttribute(this._handle, BASSAttribute.BASS_ATTRIB_VOL, value); }
+            set
+            {
+                var b = Bass.BASS_ChannelSetAttribute(this._handle, BASSAttribute.BASS_ATTRIB_VOL, value);
+                if (!b)
+                    this._volume = value;
+            }
         }
 
         /// <summary>

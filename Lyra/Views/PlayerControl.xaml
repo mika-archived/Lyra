@@ -64,18 +64,33 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis">
-                    <Run Text="{Binding PlayingTrack.Track.Title}" />
-                    <Run Text=" (" />
-                    <Run Text="{Binding PlayingTrack.Track.Artist}" />
-                    <Run Text="/" />
-                    <Run Text="{Binding PlayingTrack.Track.Album}" />
-                    <Run Text=")" />
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} ({1} / {2})">
+                            <Binding Path="PlayingTrack.Track.Title" />
+                            <Binding Path="PlayingTrack.Track.Artist" />
+                            <Binding Path="PlayingTrack.Track.Album" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                    <TextBlock.ToolTip>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1} / {2})">
+                                    <Binding Path="PlayingTrack.Track.Title" />
+                                    <Binding Path="PlayingTrack.Track.Artist" />
+                                    <Binding Path="PlayingTrack.Track.Album" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </TextBlock.ToolTip>
                 </TextBlock>
 
                 <TextBlock Grid.Column="1">
-                    <Run Text="{Binding CurrentTime, Mode=OneWay}" />
-                    <Run Text=" / " />
-                    <Run Text="{Binding PlayingTrack.Duration, Mode=OneWay}" />
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} / {1}">
+                            <Binding Path="CurrentTime" />
+                            <Binding Path="PlayingTrack.Duration" Mode="OneWay" />
+                        </MultiBinding>
+                    </TextBlock.Text>
                 </TextBlock>
             </Grid>
 
@@ -96,6 +111,7 @@
                             VerticalAlignment="Center"
                             Maximum="100"
                             Minimum="0"
+                            Value="{Binding Volume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource HorizontalTrackBarB}"
                             Ticks="1" />
             <Button Content="&#xE1CD;" />

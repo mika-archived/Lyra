@@ -87,6 +87,9 @@
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource SymbolButtonDisableBrush}"></Setter>
+            </Trigger>
         </Style.Triggers>
     </Style>
 

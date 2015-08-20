@@ -106,6 +106,7 @@
     </ApplicationDefinition>
     <Compile Include="Models\Audio\BassPlayer.cs" />
     <Compile Include="Models\Audio\IAudioPlayer.cs" />
+    <Compile Include="Models\DummyTrack.cs" />
     <Compile Include="Models\LyraApp.cs" />
     <Compile Include="Models\Track.cs" />
     <Compile Include="Models\TrackInfo.cs" />

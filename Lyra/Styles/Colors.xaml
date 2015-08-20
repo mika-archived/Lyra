@@ -4,4 +4,7 @@
 
     <Color x:Key="SymbolButtonHighlightColor">#FF999999</Color>
     <SolidColorBrush x:Key="SymbolButtonHighlightBrush" Color="#FF999999" />
+
+    <Color x:Key="SymbolButtonDisableColor">#FFCCCCCC</Color>
+    <SolidColorBrush x:Key="SymbolButtonDisableBrush">#FFCCCCCC</SolidColorBrush>
 </ResourceDictionary>

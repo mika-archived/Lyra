@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using Livet;
 using Livet.Commands;
 
+using Lyra.Models;
 using Lyra.Models.Audio;
 
 namespace Lyra.ViewModels
@@ -18,7 +19,7 @@ namespace Lyra.ViewModels
 
         public TrackViewModel SelectedTrack
         {
-            get
+            private get
             { return _SelectedTrack; }
             set
             {
@@ -89,9 +90,34 @@ namespace Lyra.ViewModels
 
         #endregion
 
+        #region Volume変更通知プロパティ
+
+        // Bass側の volume は 0.0f ~ 1.0f
+        // 表示側は 0 ~ 100
+        public float Volume
+        {
+            get
+            { return this._player.Volume * 100; }
+            set
+            {
+                if (Math.Abs(this._player.Volume - (value / 100)) <= 0)
+                    return;
+                this._player.Volume = value / 100;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
         public PlayerControlViewModel()
         {
             this._player = new BassPlayer();
+
+            // ダミー
+            this.PlayingTrack = new TrackViewModel(new DummyTrack());
+
+            // ボリュームは 0.5f (前回の設定から読み込むべき)
+            this.Volume = 0.5f;
 
             // タイマー開始
             var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(1));
@@ -102,7 +128,15 @@ namespace Lyra.ViewModels
         // 現在再生中の場所を取得します。
         private void UpdateTime()
         {
-            this.CurrentDuration = this._player.CurrentTime;
+            var duration = this._player.CurrentTime;
+            // -1(-1000) の時は、未再生状態
+            if (duration < 0)
+            {
+                this.CurrentDuration = 0;
+                this.CurrentTime = "00:00";
+                return;
+            }
+            this.CurrentDuration = duration;
             var timespan = TimeSpan.FromSeconds(this.CurrentDuration / 1000D);
             if (timespan.Hours >= 1)
                 this.CurrentTime = $"{timespan.Hours:D2}:{timespan.Minutes:D2}:{timespan.Seconds:D2}";
