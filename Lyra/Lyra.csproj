@@ -104,6 +104,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converter\PlayStateToIconConverter.cs" />
     <Compile Include="Converter\VolumeToIconConverter.cs" />
     <Compile Include="Models\Audio\BassPlayer.cs" />
     <Compile Include="Models\Audio\IAudioPlayer.cs" />

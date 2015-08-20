@@ -17,6 +17,7 @@
                 <Setter Property="FontSize" Value="24" />
             </Style>
             <converter:VolumeToIconConverter x:Key="VolumeToIconConverter" />
+            <converter:PlayStateToIconConverter x:Key="PlayStateToIconConverter" />
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -26,7 +27,7 @@
 
         <StackPanel Grid.Column="0" Orientation="Horizontal">
             <Button Content="&#xE100;" Command="{Binding PreviousCommand}" />
-            <Button Content="&#xE102;" Command="{Binding PlayCommand}" />
+            <Button Content="{Binding Path=PlayState, Converter={StaticResource PlayStateToIconConverter}}" Command="{Binding PlayCommand}" />
             <!--  pause  -->
             <!--<Button>&#xE103;</Button>-->
             <Button Content="&#xE91F;" Command="{Binding StopCommand}" />

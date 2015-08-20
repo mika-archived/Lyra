@@ -34,7 +34,7 @@ namespace Lyra.Models.Audio
 
         /// <summary>
         /// 音声ファイルを再生します。
-        /// ポーズから再開する場合は、pathはnullにします。
+        /// ポーズから再開する場合は、pathはnullもしくは同じものにします。
         /// </summary>
         /// <param name="path">ファイルパス</param>
         public void Play(string path = null)
@@ -46,12 +46,8 @@ namespace Lyra.Models.Audio
                 this.Stop();
             }
 
-            // 再生不可
-            if (path == null && this.PlayState != PlayState.Paused)
-                return;
-
             // handler
-            if (path != null)
+            if (path != null && this.PlayState != PlayState.Paused)
             {
                 if (!File.Exists(path))
                     return;
@@ -61,7 +57,7 @@ namespace Lyra.Models.Audio
                     throw new Exception("ファイルを再生できません。");
             }
 
-            Bass.BASS_ChannelPlay(this._handle, this.PlayState == PlayState.Paused);
+            Bass.BASS_ChannelPlay(this._handle, this.PlayState != PlayState.Paused);
             this._path = path;
         }
 

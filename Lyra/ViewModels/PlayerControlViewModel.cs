@@ -143,7 +143,7 @@ namespace Lyra.ViewModels
             this.Volume = 50;
 
             // タイマー開始
-            var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
             var subscriber = timer.Subscribe(_ => this.UpdateTick());
             this.CompositeDisposable.Add(subscriber);
         }
@@ -193,6 +193,13 @@ namespace Lyra.ViewModels
 
         private void Play()
         {
+            // ポーズ
+            if (this.PlayState == PlayState.Playing)
+            {
+                this._player.Pause();
+                return;
+            }
+
             this._player.Play(this.SelectedTrack.Track.FilePath);
             // ボリュームがリセットされるので再度
             this.Volume = this._tempVol * 100;
