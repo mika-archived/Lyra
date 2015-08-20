@@ -13,6 +13,8 @@ namespace Lyra.ViewModels
     {
         private readonly BassPlayer _player;
 
+        private float _tempVol;
+
         #region SelectedTrack変更通知プロパティ
 
         private TrackViewModel _SelectedTrack;
@@ -103,6 +105,27 @@ namespace Lyra.ViewModels
                 if (Math.Abs(this._player.Volume - (value / 100)) <= 0)
                     return;
                 this._player.Volume = value / 100;
+                this._tempVol = value / 100;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region PlayState変更通知プロパティ
+
+        private PlayState _PlayState;
+
+        public PlayState PlayState
+        {
+            get
+            { return _PlayState; }
+            set
+            {
+                if (_PlayState == value)
+                    return;
+                _PlayState = value;
+                this.StopCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged();
             }
         }
@@ -117,26 +140,27 @@ namespace Lyra.ViewModels
             this.PlayingTrack = new TrackViewModel(new DummyTrack());
 
             // ボリュームは 0.5f (前回の設定から読み込むべき)
-            this.Volume = 0.5f;
+            this.Volume = 50;
 
             // タイマー開始
             var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(1));
-            var subscriber = timer.Subscribe(_ => this.UpdateTime());
+            var subscriber = timer.Subscribe(_ => this.UpdateTick());
             this.CompositeDisposable.Add(subscriber);
         }
 
-        // 現在再生中の場所を取得します。
-        private void UpdateTime()
+        private void UpdateTick()
         {
-            var duration = this._player.CurrentTime;
-            // -1(-1000) の時は、未再生状態
-            if (duration < 0)
+            // 再生状態を取得
+            this.PlayState = this._player.PlayState;
+            if (this.PlayState == PlayState.Stopped)
             {
+                // 停止してたらいらぬ
                 this.CurrentDuration = 0;
                 this.CurrentTime = "00:00";
                 return;
             }
-            this.CurrentDuration = duration;
+
+            this.CurrentDuration = this._player.CurrentTime;
             var timespan = TimeSpan.FromSeconds(this.CurrentDuration / 1000D);
             if (timespan.Hours >= 1)
                 this.CurrentTime = $"{timespan.Hours:D2}:{timespan.Minutes:D2}:{timespan.Seconds:D2}";
@@ -170,6 +194,8 @@ namespace Lyra.ViewModels
         private void Play()
         {
             this._player.Play(this.SelectedTrack.Track.FilePath);
+            // ボリュームがリセットされるので再度
+            this.Volume = this._tempVol * 100;
             this.PlayingTrack = this.SelectedTrack;
         }
 

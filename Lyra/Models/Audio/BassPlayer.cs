@@ -12,6 +12,8 @@ namespace Lyra.Models.Audio
     public class BassPlayer : IAudioPlayer
     {
         private int _handle;
+        private float _volume;
+        private string _path;
 
         public BassPlayer()
         {
@@ -28,11 +30,6 @@ namespace Lyra.Models.Audio
 
             // Add-on 周り
             Bass.BASS_PluginLoadDirectory(LyraApp.BassNetModuleDir);
-
-            // ボリュームはとりあえず半分
-            this.Volume = 0.5f;
-
-            this.PlayState = PlayState.Stopped;
         }
 
         /// <summary>
@@ -43,7 +40,11 @@ namespace Lyra.Models.Audio
         public void Play(string path = null)
         {
             if (this.PlayState == PlayState.Playing)
-                return;
+            {
+                if (this._path == path)
+                    return;
+                this.Stop();
+            }
 
             // 再生不可
             if (path == null && this.PlayState != PlayState.Paused)
@@ -60,8 +61,8 @@ namespace Lyra.Models.Audio
                     throw new Exception("ファイルを再生できません。");
             }
 
-            this.PlayState = PlayState.Playing;
             Bass.BASS_ChannelPlay(this._handle, this.PlayState == PlayState.Paused);
+            this._path = path;
         }
 
         public void Pause()
@@ -69,7 +70,6 @@ namespace Lyra.Models.Audio
             if (this.PlayState != PlayState.Playing)
                 return;
 
-            this.PlayState = PlayState.Paused;
             Bass.BASS_ChannelPause(this._handle);
         }
 
@@ -78,7 +78,6 @@ namespace Lyra.Models.Audio
             if (this.PlayState == PlayState.Stopped)
                 return;
 
-            this.PlayState = PlayState.Stopped;
             Bass.BASS_ChannelStop(this._handle);
 
             // 再生箇所を初期化
@@ -93,10 +92,20 @@ namespace Lyra.Models.Audio
         /// <summary>
         /// 現在の再生状況を取得します。
         /// </summary>
-        public PlayState PlayState { get; private set; }
-
-        //
-        private float _volume;
+        public PlayState PlayState
+        {
+            get
+            {
+                var state = Bass.BASS_ChannelIsActive(this._handle);
+                // switch 使うまでもないような
+                if (state == BASSActive.BASS_ACTIVE_PLAYING)
+                    return PlayState.Playing;
+                else if (state == BASSActive.BASS_ACTIVE_PAUSED)
+                    return PlayState.Paused;
+                else
+                    return PlayState.Stopped;
+            }
+        }
 
         /// <summary>
         /// 現在のボリュームを取得/設定します。
@@ -107,14 +116,15 @@ namespace Lyra.Models.Audio
             get
             {
                 var volume = this._volume;
-                Bass.BASS_ChannelGetAttribute(this._handle, BASSAttribute.BASS_ATTRIB_VOL, ref volume);
+                var b = Bass.BASS_ChannelGetAttribute(this._handle, BASSAttribute.BASS_ATTRIB_VOL, ref volume);
+                if (!b)
+                    return this._volume;
                 return volume;
             }
             set
             {
-                var b = Bass.BASS_ChannelSetAttribute(this._handle, BASSAttribute.BASS_ATTRIB_VOL, value);
-                if (!b)
-                    this._volume = value;
+                Bass.BASS_ChannelSetAttribute(this._handle, BASSAttribute.BASS_ATTRIB_VOL, value);
+                this._volume = value;
             }
         }
 

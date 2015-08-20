@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Lyra.Views"
+             xmlns:converter="clr-namespace:Lyra.Converter"
              xmlns:vm="clr-namespace:Lyra.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="48" d:DesignWidth="700"
@@ -15,6 +16,7 @@
                 <Setter Property="Width" Value="48" />
                 <Setter Property="FontSize" Value="24" />
             </Style>
+            <converter:VolumeToIconConverter x:Key="VolumeToIconConverter" />
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -106,7 +108,7 @@
 
         <StackPanel Grid.Column="2" Orientation="Horizontal">
             <!--  when button clicked, mute sound  -->
-            <Button Content="&#xE15D;" />
+            <Button Content="{Binding Path=Volume, Converter={StaticResource VolumeToIconConverter}}" />
             <Slider Width="100"
                             VerticalAlignment="Center"
                             Maximum="100"

@@ -34,10 +34,19 @@ namespace Lyra.Models.Audio
 
     public enum PlayState
     {
+        /// <summary>
+        /// 再生中
+        /// </summary>
         Playing,
 
+        /// <summary>
+        /// 一時停止中
+        /// </summary>
         Paused,
 
+        /// <summary>
+        /// 停止
+        /// </summary>
         Stopped
     }
 }
