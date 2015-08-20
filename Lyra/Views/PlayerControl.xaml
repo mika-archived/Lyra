@@ -76,7 +76,7 @@
                         </MultiBinding>
                     </TextBlock.Text>
                     <TextBlock.ToolTip>
-                        <TextBlock>
+                        <TextBlock Foreground="{DynamicResource ForegroundBrushKey}">
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{}{0} ({1} / {2})">
                                     <Binding Path="PlayingTrack.Track.Title" />
