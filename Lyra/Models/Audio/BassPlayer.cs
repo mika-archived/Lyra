@@ -36,7 +36,7 @@ namespace Lyra.Models.Audio
         /// 音声ファイルを再生します。
         /// ポーズから再開する場合は、pathはnullもしくは同じものにします。
         /// </summary>
-        /// <param name="path">ファイルパス</param>
+        /// <param name="path">ファイルパス もしくは 有効な Stream 再生用の URI</param>
         public void Play(string path = null)
         {
             if (this.PlayState == PlayState.Playing)
@@ -49,10 +49,12 @@ namespace Lyra.Models.Audio
             // handler
             if (path != null && this.PlayState != PlayState.Paused)
             {
-                if (!File.Exists(path))
-                    return;
+                // File?
+                if (File.Exists(path))
+                    this._handle = Bass.BASS_StreamCreateFile(path, 0, 0, BASSFlag.BASS_DEFAULT);
+                else if (path.StartsWith("https://") || path.StartsWith("http://") || path.StartsWith("ftp://"))
+                    this._handle = Bass.BASS_StreamCreateURL(path, 0, BASSFlag.BASS_DEFAULT, null, IntPtr.Zero);
 
-                this._handle = Bass.BASS_StreamCreateFile(path, 0, 0, BASSFlag.BASS_DEFAULT);
                 if (this._handle == 0)
                     throw new Exception("ファイルを再生できません。");
             }
@@ -61,6 +63,10 @@ namespace Lyra.Models.Audio
             this._path = path;
         }
 
+        /// <summary>
+        /// 現在再生中のファイルをポーズします。
+        /// 再度再生する場合は、Playを呼び出してください。
+        /// </summary>
         public void Pause()
         {
             if (this.PlayState != PlayState.Playing)
@@ -69,6 +75,9 @@ namespace Lyra.Models.Audio
             Bass.BASS_ChannelPause(this._handle);
         }
 
+        /// <summary>
+        /// 現在再生中のファイルをストップします。
+        /// </summary>
         public void Stop()
         {
             if (this.PlayState == PlayState.Stopped)
