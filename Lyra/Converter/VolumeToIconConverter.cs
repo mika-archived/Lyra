@@ -25,7 +25,7 @@ namespace Lyra.Converter
                 throw new ArgumentException(nameof(value) + "is must be float(System.Single).");
 
             if (volume == 0)
-                return LyraApp.ButtonVolume0;
+                return LyraApp.ButtonVolumeMute;
             else if (0 < volume && volume <= 33)
                 return LyraApp.ButtonVolume1;
             else if (33 < volume && volume <= 66)

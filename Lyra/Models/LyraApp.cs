@@ -28,6 +28,8 @@ namespace Lyra.Models
 
         public static string ButtonPause => "\uE103";
 
+        public static string ButtonVolumeMute => "\uE198";
+
         public static string ButtonVolume0 => "\uE992";
 
         public static string ButtonVolume1 => "\uE993";

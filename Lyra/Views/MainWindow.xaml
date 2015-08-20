@@ -22,10 +22,10 @@
         <i:EventTrigger EventName="ContentRendered">
             <l:LivetCallMethodAction MethodName="Initialize" MethodTarget="{Binding}" />
         </i:EventTrigger>
+        -->
         <i:EventTrigger EventName="Closed">
             <l:DataContextDisposeAction />
         </i:EventTrigger>
-        -->
     </i:Interaction.Triggers>
 
     <Grid>
@@ -67,9 +67,10 @@
                     BorderBrush="{DynamicResource BorderBrushKey}"
                     BorderThickness="1">
                 <ListView x:Name="TrackListView"
-                          ItemsSource="{Binding Tracks}"
                           AlternationCount="2"
-                          SelectedItem="{Binding SelectedTrack, Mode=TwoWay}">
+                          ItemsSource="{Binding Tracks}"
+                          SelectedItem="{Binding SelectedTrack,
+                                                 Mode=TwoWay}">
                     <ListView.Resources>
                         <!--  Default Style  -->
                         <Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
@@ -163,13 +164,12 @@
                                         <ContentControl>
                                             <i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="MouseDoubleClick">
-                                                    <i:InvokeCommandAction Command="{Binding DataContext.MouseDoubleClickCommand, RelativeSource={RelativeSource AncestorType={x:Type metro:MetroWindow}}}"
-                                                                           CommandParameter="{Binding}" />
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.MouseDoubleClickCommand, RelativeSource={RelativeSource AncestorType={x:Type metro:MetroWindow}}}" CommandParameter="{Binding}" />
                                                 </i:EventTrigger>
                                             </i:Interaction.Triggers>
                                             <Border Background="{TemplateBinding Background}"
-                                                BorderThickness="0,0,0,1"
-                                                BorderBrush="{DynamicResource ActiveBorderBrushKey}">
+                                                    BorderBrush="{DynamicResource ActiveBorderBrushKey}"
+                                                    BorderThickness="0,0,0,1">
                                                 <GridViewRowPresenter Margin="0,2" />
                                             </Border>
                                         </ContentControl>
@@ -181,7 +181,7 @@
                                     <Setter Property="Background" Value="{DynamicResource SemiactiveBackgroundBrushKey}" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource BackgroundBrushKey}"></Setter>
+                                    <Setter Property="Background" Value="{DynamicResource BackgroundBrushKey}" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -191,56 +191,49 @@
                             <GridViewColumn Width="35" Header="Info">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Track.Info}"
-                                                   Style="{StaticResource DefaultTextStyle}" />
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Info}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Width="35" Header="番号">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Track.Number}"
-                                                   Style="{StaticResource DefaultTextStyle}" />
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Number}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Width="250" Header="タイトル">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Track.Title}"
-                                                   Style="{StaticResource DefaultTextStyle}" />
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Title}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Width="180" Header="アーティスト">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Track.Artist}"
-                                                   Style="{StaticResource DefaultTextStyle}" />
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Artist}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Width="250" Header="アルバム">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Track.Album}"
-                                                   Style="{StaticResource DefaultTextStyle}" />
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Album}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Width="70" Header="時間">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Duration}"
-                                                   Style="{StaticResource DefaultTextStyle}" />
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Duration}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Width="95" Header="Status">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Track.Status}"
-                                                   Style="{StaticResource DefaultTextStyle}" />
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Status}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

@@ -248,5 +248,25 @@ namespace Lyra.ViewModels
         }
 
         #endregion
+
+        #region ToggleVolumeCommand
+
+        private ViewModelCommand _ToggleVolumeCommand;
+
+        public ViewModelCommand ToggleVolumeCommand => _ToggleVolumeCommand ?? (_ToggleVolumeCommand = new ViewModelCommand(ToggleVolume));
+
+        private void ToggleVolume()
+        {
+            var temp = this.Volume;
+            if (Math.Abs(this.Volume) > 0)
+            {
+                this.Volume = 0;
+                this._tempVol = temp;
+            }
+            else
+                this.Volume = this._tempVol;
+        }
+
+        #endregion
     }
 }
