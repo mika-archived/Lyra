@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 
 using Livet;
+using Livet.Commands;
 
 namespace Lyra.ViewModels
 {
@@ -14,8 +15,7 @@ namespace Lyra.ViewModels
 
         public ReadOnlyCollection<TrackViewModel> Tracks
         {
-            get
-            { return _Tracks; }
+            get { return _Tracks; }
             set
             {
                 if (_Tracks == value)
@@ -33,8 +33,7 @@ namespace Lyra.ViewModels
 
         public TrackViewModel SelectedTrack
         {
-            get
-            { return _SelectedTrack; }
+            get { return _SelectedTrack; }
             set
             {
                 if (_SelectedTrack == value)
@@ -53,8 +52,7 @@ namespace Lyra.ViewModels
 
         public PlayerControlViewModel PlayerControlViewModel
         {
-            get
-            { return _PlayerControlViewModel; }
+            get { return _PlayerControlViewModel; }
             set
             {
                 if (_PlayerControlViewModel == value)
@@ -72,8 +70,7 @@ namespace Lyra.ViewModels
 
         public StatusBarViewModel StatusBarViewModel
         {
-            get
-            { return _StatusBarViewModel; }
+            get { return _StatusBarViewModel; }
             set
             {
                 if (_StatusBarViewModel == value)
@@ -93,5 +90,21 @@ namespace Lyra.ViewModels
         public void Initialize()
         {
         }
+
+        #region MouseDoubleClickCommand
+
+        private ListenerCommand<TrackViewModel> _MouseDoubleClickCommand;
+
+        public ListenerCommand<TrackViewModel> MouseDoubleClickCommand => _MouseDoubleClickCommand ??
+                                                                          (_MouseDoubleClickCommand =
+                                                                              new ListenerCommand<TrackViewModel>(
+                                                                                  MouseDoubleClick));
+
+        private void MouseDoubleClick(TrackViewModel parameter)
+        {
+            this.PlayerControlViewModel.Play(parameter);
+        }
+
+        #endregion
     }
 }

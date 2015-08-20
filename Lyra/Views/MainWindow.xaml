@@ -66,7 +66,8 @@
                     Background="{DynamicResource BackgroundBrushKey}"
                     BorderBrush="{DynamicResource BorderBrushKey}"
                     BorderThickness="1">
-                <ListView ItemsSource="{Binding Tracks}"
+                <ListView x:Name="TrackListView"
+                          ItemsSource="{Binding Tracks}"
                           AlternationCount="2"
                           SelectedItem="{Binding SelectedTrack, Mode=TwoWay}">
                     <ListView.Resources>
@@ -154,16 +155,24 @@
                     </ListView.Resources>
                     <ListView.ItemContainerStyle>
                         <Style TargetType="{x:Type ListViewItem}">
-                            <Setter Property="Background" Value="{DynamicResource ActiveBackgroundBrushKey}"></Setter>
+                            <Setter Property="Background" Value="{DynamicResource ActiveBackgroundBrushKey}" />
                             <Setter Property="OverridesDefaultStyle" Value="True" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                        <Border Background="{TemplateBinding Background}"
+                                        <ContentControl>
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDoubleClick">
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.MouseDoubleClickCommand, RelativeSource={RelativeSource AncestorType={x:Type metro:MetroWindow}}}"
+                                                                           CommandParameter="{Binding}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                            <Border Background="{TemplateBinding Background}"
                                                 BorderThickness="0,0,0,1"
                                                 BorderBrush="{DynamicResource ActiveBorderBrushKey}">
-                                            <GridViewRowPresenter Margin="0,2" />
-                                        </Border>
+                                                <GridViewRowPresenter Margin="0,2" />
+                                            </Border>
+                                        </ContentControl>
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>

@@ -168,6 +168,17 @@ namespace Lyra.ViewModels
                 this.CurrentTime = $"{timespan.Minutes:D2}:{timespan.Seconds:D2}";
         }
 
+        // Wクリックからの呼び出し
+        public void Play(TrackViewModel trackViewModel)
+        {
+            if (this.PlayState != PlayState.Stopped)
+                this.Stop();
+
+            this._player.Play(trackViewModel.Track.FilePath);
+            this.Volume = this._tempVol * 100;
+            this.PlayingTrack = trackViewModel;
+        }
+
         #region NextCommand
 
         private ViewModelCommand _NextCommand;
