@@ -3,13 +3,14 @@ using System.Globalization;
 using System.Windows.Data;
 
 using Lyra.Models;
+using Lyra.Models.Audio;
 
-namespace Lyra.Converter
+namespace Lyra.Converters
 {
     /// <summary>
-    /// 入力されたボリューム値から、それにあったボリュームアイコンへ変換します。
+    /// <see cref="Lyra.Models.Audio.PlayState"/> を 定義されたアイコンに変換します。
     /// </summary>
-    public class VolumeToIconConverter : IValueConverter
+    public class PlayStateToIconConverter : IValueConverter
     {
         /// <summary>
         /// 値を変換します。
@@ -20,18 +21,14 @@ namespace Lyra.Converter
         /// <param name="value">バインディング ソースによって生成された値。</param><param name="targetType">バインディング ターゲット プロパティの型。</param><param name="parameter">使用するコンバーター パラメーター。</param><param name="culture">コンバーターで使用するカルチャ。</param>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var volume = value as float?;
-            if (volume == null)
-                throw new ArgumentException(nameof(value) + "is must be float(System.Single).");
+            if (!(value is PlayState))
+                return null;
 
-            if (volume == 0)
-                return LyraApp.ButtonVolumeMute;
-            else if (0 < volume && volume <= 33)
-                return LyraApp.ButtonVolume1;
-            else if (33 < volume && volume <= 66)
-                return LyraApp.ButtonVolume2;
+            var state = (PlayState)value;
+            if (state == PlayState.Playing)
+                return LyraApp.ButtonPause;
             else
-                return LyraApp.ButtonVolume3;
+                return LyraApp.ButtonPlay;
         }
 
         /// <summary>
