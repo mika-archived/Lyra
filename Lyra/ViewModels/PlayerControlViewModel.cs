@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 using Livet;
 using Livet.Commands;
@@ -174,9 +175,12 @@ namespace Lyra.ViewModels
             if (this.PlayState != PlayState.Stopped)
                 this.Stop();
 
-            this._player.Play(trackViewModel.Track.Path);
-            this.Volume = this._tempVol * 100;
-            this.PlayingTrack = trackViewModel;
+            Task.Run(() =>
+            {
+                this._player.Play(trackViewModel.Track.Path);
+                this.Volume = this._tempVol * 100;
+                this.PlayingTrack = trackViewModel;
+            });
         }
 
         #region NextCommand
@@ -211,10 +215,13 @@ namespace Lyra.ViewModels
                 return;
             }
 
-            this._player.Play(this.SelectedTrack.Track.Path);
-            // ボリュームがリセットされるので再度
-            this.Volume = this._tempVol * 100;
-            this.PlayingTrack = this.SelectedTrack;
+            Task.Run(() =>
+            {
+                this._player.Play(this.SelectedTrack.Track.Path);
+                // ボリュームがリセットされるので再度
+                this.Volume = this._tempVol * 100;
+                this.PlayingTrack = this.SelectedTrack;
+            });
         }
 
         #endregion

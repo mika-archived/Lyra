@@ -16,10 +16,14 @@ namespace Lyra.Models.Database
             System.Data.Entity.Database.SetInitializer<AppDbContext>(null);
         }
 
+        // -- Tracks --
         public DbSet<Track> Tracks { get; set; }
 
         public DbSet<Artist> Artists { get; set; }
 
         public DbSet<Album> Albums { get; set; }
+
+        // -- WatchList --
+        public DbSet<Location> Locations { get; set; }
     }
 }

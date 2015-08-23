@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Data.Common;
 
 using Livet;
@@ -16,9 +15,9 @@ namespace Lyra.ViewModels
 
         #region Tracks変更通知プロパティ
 
-        private ReadOnlyCollection<TrackViewModel> _Tracks;
+        private ObservableCollection<TrackViewModel> _Tracks;
 
-        public ReadOnlyCollection<TrackViewModel> Tracks
+        public ObservableCollection<TrackViewModel> Tracks
         {
             get { return _Tracks; }
             set
@@ -90,10 +89,9 @@ namespace Lyra.ViewModels
         public MainWindowViewModel()
         {
             this.PlayerControlViewModel = new PlayerControlViewModel();
+            this.Tracks = new ObservableCollection<TrackViewModel>();
 
-            var tracks = new List<TrackViewModel>();
-
-            // Temporary
+            // <<<Temporary>>>
             var connection = DbProviderFactories.GetFactory(LyraApp.DatabaseProvider).CreateConnection();
             connection.ConnectionString = LyraApp.DatabaseConnectionString;
 
@@ -102,10 +100,9 @@ namespace Lyra.ViewModels
                 // LINQ で回すと死ぬ, Include("Album"), Include("Artist") で先に読み込んでおかないと、 Binding 時に Track.Album.Name とかが null になる
                 foreach (var track in dbcontext.Tracks.Include("Album").Include("Artist"))
                 {
-                    tracks.Add(new TrackViewModel(track));
+                    Tracks.Add(new TrackViewModel(track));
                 }
             }
-            this.Tracks = tracks.AsReadOnly();
         }
 
         public void Initialize()

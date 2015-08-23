@@ -137,10 +137,12 @@
     <Compile Include="Models\Audio\IAudioPlayer.cs" />
     <Compile Include="Models\Database\AppDbContext.cs" />
     <Compile Include="Models\DummyTrack.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\LyraApp.cs" />
     <Compile Include="Models\Track.cs" />
     <Compile Include="Models\TrackInfo.cs" />
     <Compile Include="Models\TrackState.cs" />
+    <Compile Include="Models\Watchers\DirectoryWatcher.cs" />
     <Compile Include="Models\Watchers\Watcher.cs" />
     <Compile Include="ViewModels\PlayerControlViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />

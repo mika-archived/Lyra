@@ -66,6 +66,11 @@ namespace Lyra
                                           "Title TEXT UNIQUE," +
                                           "Artwork TEXT);";
                     command.ExecuteNonQuery();
+
+                    command.CommandText = "CREATE TABLE IF NOT EXISTS Locations(" +
+                                          "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                          "Path TEXT UNIQUE);";
+                    command.ExecuteNonQuery();
                 }
             }
         }
