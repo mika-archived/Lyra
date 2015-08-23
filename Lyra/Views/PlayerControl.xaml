@@ -54,7 +54,7 @@
                    Width="48"
                    Height="48">
                 <Image.Source>
-                    <Binding Path="PlayingTrack.Track.Jacket">
+                    <Binding Path="PlayingTrack.Track.Album.Artwork">
                         <Binding.TargetNullValue>
                             <ImageSource>../Resources/bg.png</ImageSource>
                         </Binding.TargetNullValue>
@@ -80,8 +80,8 @@
                     <TextBlock.Text>
                         <MultiBinding StringFormat="{}{0} ({1} / {2})">
                             <Binding Path="PlayingTrack.Track.Title" />
-                            <Binding Path="PlayingTrack.Track.Artist" />
-                            <Binding Path="PlayingTrack.Track.Album" />
+                            <Binding Path="PlayingTrack.Track.Artist.Name" />
+                            <Binding Path="PlayingTrack.Track.Album.Title" />
                         </MultiBinding>
                     </TextBlock.Text>
                     <TextBlock.ToolTip>
@@ -89,8 +89,8 @@
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{}{0} ({1} / {2})">
                                     <Binding Path="PlayingTrack.Track.Title" />
-                                    <Binding Path="PlayingTrack.Track.Artist" />
-                                    <Binding Path="PlayingTrack.Track.Album" />
+                                    <Binding Path="PlayingTrack.Track.Artist.Name" />
+                                    <Binding Path="PlayingTrack.Track.Album.Title" />
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>

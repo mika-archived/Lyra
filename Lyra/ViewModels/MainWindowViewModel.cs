@@ -1,7 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Common;
 
 using Livet;
 using Livet.Commands;
+
+using Lyra.Models;
+using Lyra.Models.Database;
 
 namespace Lyra.ViewModels
 {
@@ -85,10 +90,32 @@ namespace Lyra.ViewModels
         public MainWindowViewModel()
         {
             this.PlayerControlViewModel = new PlayerControlViewModel();
+
+            var tracks = new List<TrackViewModel>();
+
+            // Temporary
+            var connection = DbProviderFactories.GetFactory(LyraApp.DatabaseProvider).CreateConnection();
+            connection.ConnectionString = LyraApp.DatabaseConnectionString;
+
+            using (var dbcontext = new AppDbContext(connection))
+            {
+                // LINQ で回すと死ぬ, Include("Album"), Include("Artist") で先に読み込んでおかないと、 Binding 時に Track.Album.Name とかが null になる
+                foreach (var track in dbcontext.Tracks.Include("Album").Include("Artist"))
+                {
+                    tracks.Add(new TrackViewModel(track));
+                }
+            }
+            this.Tracks = tracks.AsReadOnly();
         }
 
         public void Initialize()
         {
+            AppInitializer.PostInitialize();
+        }
+
+        public void UnInitialize()
+        {
+            //
         }
 
         #region MouseDoubleClickCommand

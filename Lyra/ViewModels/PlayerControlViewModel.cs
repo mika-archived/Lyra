@@ -174,7 +174,7 @@ namespace Lyra.ViewModels
             if (this.PlayState != PlayState.Stopped)
                 this.Stop();
 
-            this._player.Play(trackViewModel.Track.FilePath);
+            this._player.Play(trackViewModel.Track.Path);
             this.Volume = this._tempVol * 100;
             this.PlayingTrack = trackViewModel;
         }
@@ -211,7 +211,7 @@ namespace Lyra.ViewModels
                 return;
             }
 
-            this._player.Play(this.SelectedTrack.Track.FilePath);
+            this._player.Play(this.SelectedTrack.Track.Path);
             // ボリュームがリセットされるので再度
             this.Volume = this._tempVol * 100;
             this.PlayingTrack = this.SelectedTrack;
@@ -268,5 +268,11 @@ namespace Lyra.ViewModels
         }
 
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            this._player.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

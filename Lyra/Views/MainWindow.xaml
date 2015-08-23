@@ -19,12 +19,11 @@
     </metro:MetroWindow.DataContext>
 
     <i:Interaction.Triggers>
-        <!--
         <i:EventTrigger EventName="ContentRendered">
             <l:LivetCallMethodAction MethodName="Initialize" MethodTarget="{Binding}" />
         </i:EventTrigger>
-        -->
         <i:EventTrigger EventName="Closed">
+            <l:LivetCallMethodAction MethodName="UnInitialize" MethodTarget="{Binding}" />
             <l:DataContextDisposeAction />
         </i:EventTrigger>
     </i:Interaction.Triggers>
@@ -225,7 +224,7 @@
                             <GridViewColumn Width="180" Header="アーティスト">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Artist}">
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Artist.Name}">
                                             <i:Interaction.Behaviors>
                                                 <behaviors:TextBlockToolTipBehavior />
                                             </i:Interaction.Behaviors>
@@ -236,7 +235,7 @@
                             <GridViewColumn Width="250" Header="アルバム">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Album}">
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Album.Title}">
                                             <i:Interaction.Behaviors>
                                                 <behaviors:TextBlockToolTipBehavior />
                                             </i:Interaction.Behaviors>

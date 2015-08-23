@@ -1,10 +1,20 @@
-﻿using Livet;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+using Livet;
 
 namespace Lyra.Models
 {
-    /// <summary>
-    /// トラック情報
-    /// </summary>
+    // +--------------------------------------------------------------+
+    // | Track                                                        |
+    // +--------------+-----------------------------------------------+
+    // | id           | INTEGER PRIMARY KEY AUTOINCREMENT             |
+    // | path         | TEXT UNIQUE                                   |
+    // | number       | INTEGER                                       |
+    // | title        | TEXT                                          |
+    // | artist_id    | INTEGER  FOREIGN KEY REFERENCES artists(id)   |
+    // | album_id     | INTEGER  FOREIGN KEY REFERENCES albums(id)    |
+    // | duration     | INTEGER                                       |
+    // +--------------+-----------------------------------------------+
     public class Track : NotificationObject
     {
         #region Id変更通知プロパティ
@@ -26,19 +36,19 @@ namespace Lyra.Models
 
         #endregion
 
-        #region Info変更通知プロパティ
+        #region Path変更通知プロパティ
 
-        private TrackInfo _Info;
+        private string _Path;
 
-        public TrackInfo Info
+        public string Path
         {
             get
-            { return _Info; }
+            { return _Path; }
             set
             {
-                if (_Info == value)
+                if (_Path == value)
                     return;
-                _Info = value;
+                _Path = value;
                 RaisePropertyChanged();
             }
         }
@@ -83,11 +93,13 @@ namespace Lyra.Models
 
         #endregion
 
+        public int ArtistId { get; set; }
+
         #region Artist変更通知プロパティ
 
-        private string _Artist;
+        private Artist _Artist;
 
-        public string Artist
+        public virtual Artist Artist
         {
             get
             { return _Artist; }
@@ -102,11 +114,13 @@ namespace Lyra.Models
 
         #endregion
 
+        public int AlbumId { get; set; }
+
         #region Album変更通知プロパティ
 
-        private string _Album;
+        private Album _Album;
 
-        public string Album
+        public virtual Album Album
         {
             get
             { return _Album; }
@@ -142,29 +156,13 @@ namespace Lyra.Models
 
         #endregion
 
-        #region Jacket変更通知プロパティ
-
-        private string _Jacket;
-
-        public string Jacket
-        {
-            get
-            { return _Jacket; }
-            set
-            {
-                if (_Jacket == value)
-                    return;
-                _Jacket = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
+        // ------------------------------------------------------------
 
         #region Status変更通知プロパティ
 
         private TrackState _Status;
 
+        [NotMapped]
         public TrackState Status
         {
             get
@@ -180,19 +178,20 @@ namespace Lyra.Models
 
         #endregion
 
-        #region FilePath変更通知プロパティ
+        #region Info変更通知プロパティ
 
-        private string _FilePath;
+        private TrackInfo _Info;
 
-        public string FilePath
+        [NotMapped]
+        public TrackInfo Info
         {
             get
-            { return _FilePath; }
+            { return _Info; }
             set
             {
-                if (_FilePath == value)
+                if (_Info == value)
                     return;
-                _FilePath = value;
+                _Info = value;
                 RaisePropertyChanged();
             }
         }

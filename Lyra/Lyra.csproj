@@ -127,11 +127,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppInitializer.cs" />
     <Compile Include="Behaviors\TextBlockToolTipBehavior.cs" />
     <Compile Include="Converters\PlayStateToIconConverter.cs" />
     <Compile Include="Converters\VolumeToIconConverter.cs" />
+    <Compile Include="Models\Album.cs" />
+    <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\Audio\BassPlayer.cs" />
     <Compile Include="Models\Audio\IAudioPlayer.cs" />
+    <Compile Include="Models\Database\AppDbContext.cs" />
     <Compile Include="Models\DummyTrack.cs" />
     <Compile Include="Models\LyraApp.cs" />
     <Compile Include="Models\Track.cs" />

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Lyra.Models
 {
@@ -43,6 +44,49 @@ namespace Lyra.Models
         public static string ButtonRepeatOnce => "\uE1CC";
 
         public static string ButtonRepeat => "\uE1CD";
+
+        #endregion
+
+        #region File / Directory Path
+
+        #region Launch Mode
+
+        private static bool? _isPortable;
+
+        /// <summary>
+        /// 起動モードを設定/取得します。
+        /// なお、設定は最初の１度のみ可能です(２度め以降は無視されます)。
+        /// </summary>
+        public static bool IsPortable
+        {
+            set
+            {
+                if (_isPortable == null)
+                    _isPortable = value;
+            }
+            get
+            {
+                if (_isPortable.HasValue)
+                    return _isPortable.Value;
+                throw new InvalidOperationException(nameof(IsPortable));
+            }
+        }
+
+        #endregion
+
+        public static string RootDirectory => IsPortable
+            ? Path.Combine(Directory.GetCurrentDirectory(), "apps")
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "mikazuki.tk", "Lyra");
+
+        public static string DatabaseFilePath => Path.Combine(RootDirectory, "application.db");
+
+        #endregion
+
+        #region Database
+
+        public static string DatabaseProvider => "System.Data.SQLite";
+
+        public static string DatabaseConnectionString => $"Data Source={DatabaseFilePath};foreign keys=true";
 
         #endregion
     }

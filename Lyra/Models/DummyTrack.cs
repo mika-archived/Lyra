@@ -1,6 +1,9 @@
-﻿namespace Lyra.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Lyra.Models
 {
-    public class DummyTrack : Track
+    [NotMapped]
+    public sealed class DummyTrack : Track
     {
         public DummyTrack()
         {
@@ -8,12 +11,11 @@
             this.Info = TrackInfo.Local;
             this.Number = 0;
             this.Title = "No Title";
-            this.Artist = "No Title";
-            this.Album = "No Title";
+            this.Artist = new Artist { Id = -1, Name = "No Title" };
+            this.Album = new Album { Id = -1, Title = "No Title", Artwork = null };
             this.Duration = 0;
-            this.Jacket = null;
             this.Status = TrackState.Local;
-            this.FilePath = null;
+            this.Path = null;
         }
     }
 }
