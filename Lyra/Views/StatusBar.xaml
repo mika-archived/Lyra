@@ -4,6 +4,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Lyra.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:Lyra.ViewModels"
+             d:DataContext="{d:DesignInstance v:StatusBarViewModel}"
              d:DesignHeight="23"
              d:DesignWidth="600"
              mc:Ignorable="d">
@@ -15,8 +17,8 @@
 
         <TextBlock Grid.Column="0"
                    Margin="5,0"
-                   Style="{DynamicResource DefaultTextStyle}"
                    Foreground="{DynamicResource AccentForegroundBrushKey}"
-                   Text="準備完了" />
+                   Style="{DynamicResource DefaultTextStyle}"
+                   Text="{Binding StatusMessage}" />
     </Grid>
 </UserControl>

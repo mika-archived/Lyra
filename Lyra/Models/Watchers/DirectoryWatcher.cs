@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 
+using Lyra.Utilities;
+
 namespace Lyra.Models.Watchers
 {
     /// <summary>
@@ -20,7 +22,7 @@ namespace Lyra.Models.Watchers
             var files = Directory.GetFiles(this.Path, "*", SearchOption.AllDirectories);
             foreach (var file in files)
             {
-                var t = this.Database.Tracks.Include("Artist").Include("Album").SingleOrDefault(w => w.Path == file);
+                var t = Database.Tracks.Include("Artist").Include("Album").SingleOrDefault(w => w.Path == file);
                 if (t != null)
                 {
                     if (this.Items.Contains(t))
@@ -38,28 +40,28 @@ namespace Lyra.Models.Watchers
                     #region *.mp3
 
                     case ".mp3":
-                        var tag = TagLib.File.Create(file);
+                        var id3Tag = new Id3Tag(file);
                         // Do not support Various Artists
                         int artistId;
-                        if (tag.Tag.AlbumArtists.Length > 0)
+                        if (id3Tag.GetArtist() != null)
                         {
-                            // タグあり
-                            var temp = tag.Tag.AlbumArtists[0];
-                            if (this.Database.Artists.Any(w => w.Name == temp))
-                                artistId = this.Database.Artists.Single(w => w.Name == temp).Id;
+                            var temp = id3Tag.GetArtist();
+                            if (Database.Artists.Any(w => w.Name == temp))
+                                artistId = Database.Artists.Single(w => w.Name == temp).Id;
                             else
-                                artistId = this.Database.Artists.Add(new Artist { Name = temp }).Id;
+                                artistId = Database.Artists.Add(new Artist { Name = temp }).Id;
                         }
                         else
                             artistId = LyraApp.DatabaseUnknownArtist;
 
                         int albumId;
-                        if (tag.Tag.Album != null)
+                        if (id3Tag.GetAlbum() != null)
                         {
-                            if (this.Database.Albums.Any(w => w.Title == tag.Tag.Album))
-                                albumId = this.Database.Albums.Single(w => w.Title == tag.Tag.Album).Id;
+                            var temp = id3Tag.GetAlbum();
+                            if (Database.Albums.Any(w => w.Title == temp))
+                                albumId = Database.Albums.Single(w => w.Title == temp).Id;
                             else
-                                albumId = this.Database.Albums.Add(new Album { Title = tag.Tag.Album }).Id;
+                                albumId = Database.Albums.Add(new Album { Title = temp }).Id;
                         }
                         else
                             albumId = LyraApp.DatabaseUnknownAlbum;
@@ -67,24 +69,27 @@ namespace Lyra.Models.Watchers
                         var track = new Track
                         {
                             Path = file,
-                            Number = (int)tag.Tag.Track,
-                            Title = tag.Tag.Title,
+                            Number = id3Tag.GetTrackNumber(),
+                            Title = id3Tag.GetTitle(),
                             ArtistId = artistId,
                             AlbumId = albumId,
-                            Duration = (int)(tag.Properties.Duration.TotalSeconds * 1000)
+                            Duration = id3Tag.GetDuration()
                         };
-                        this.Database.Tracks.Add(track);
+                        Database.Tracks.Add(track);
+                        // avoid "SQLite error (5): database is locked"
+                        Database.SaveChanges();
+
                         break;
 
                         #endregion
                 }
 
-                t = this.Database.Tracks.Include("Album").Include("Artist").SingleOrDefault(w => w.Path == file);
+                t = Database.Tracks.Include("Album").Include("Artist").SingleOrDefault(w => w.Path == file);
                 if (t != null)
                     this.Items.Add(t);
-
-                this.Database.SaveChanges();
             }
+
+            // Tick finished
         }
     }
 }

@@ -76,6 +76,9 @@ namespace Lyra.ViewModels
                     continue;
                 DispatcherHelper.UIDispatcher.Invoke(() => this.TrackList.Add(viewModel));
             }
+
+            var value = this.TrackList.OrderBy(w => w.Track.Album.Title).ThenBy(w => w.Track.Number);
+            DispatcherHelper.UIDispatcher.Invoke(() => this.TrackList = new ObservableCollection<TrackViewModel>(value));
         }
     }
 }

@@ -139,6 +139,7 @@
     <Compile Include="Behaviors\TextBlockToolTipBehavior.cs" />
     <Compile Include="Converters\PlayStateToIconConverter.cs" />
     <Compile Include="Converters\VolumeToIconConverter.cs" />
+    <Compile Include="Extensions\ViewModelEx.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\Audio\BassPlayer.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Models\Watchers\CloudWatcherProvider.cs" />
     <Compile Include="Models\Watchers\SoundCloudWatcher.cs" />
     <Compile Include="Models\Watchers\Watcher.cs" />
+    <Compile Include="Utilities\Id3Tag.cs" />
     <Compile Include="ViewModels\PlayerControlViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\TrackListViewModel.cs" />

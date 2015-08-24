@@ -1,7 +1,5 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Data.Entity;
-using System.Diagnostics;
 
 namespace Lyra.Models.Database
 {
@@ -10,7 +8,7 @@ namespace Lyra.Models.Database
         public AppDbContext(DbConnection connection) : base(connection, true)
         {
             // Log
-            this.Database.Log = s => Debug.WriteLine($"SQL Log => {Environment.NewLine}{s}");
+            // this.Database.Log = s => Debug.WriteLine($"SQL Log => {Environment.NewLine}{s}");
 
             // Disable Migration by Entity Framework
             System.Data.Entity.Database.SetInitializer<AppDbContext>(null);

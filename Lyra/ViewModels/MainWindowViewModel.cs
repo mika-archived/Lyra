@@ -1,6 +1,8 @@
 ﻿using Livet;
 using Livet.Commands;
 
+using Lyra.Extensions;
+
 namespace Lyra.ViewModels
 {
     public class MainWindowViewModel : ViewModel
@@ -83,12 +85,9 @@ namespace Lyra.ViewModels
 
         public MainWindowViewModel()
         {
-            this.PlayerControlViewModel = new PlayerControlViewModel();
-            this.TrackListViewModel = new TrackListViewModel();
-
-            // 一応
-            this.CompositeDisposable.Add(this.PlayerControlViewModel);
-            this.CompositeDisposable.Add(this.TrackListViewModel);
+            this.PlayerControlViewModel = new PlayerControlViewModel(this).AddTo(this);
+            this.TrackListViewModel = new TrackListViewModel().AddTo(this);
+            this.StatusBarViewModel = new StatusBarViewModel().AddTo(this);
         }
 
         public void Initialize()
@@ -99,6 +98,11 @@ namespace Lyra.ViewModels
         public void UnInitialize()
         {
             //
+        }
+
+        private void Play(TrackViewModel track)
+        {
+            this.PlayerControlViewModel.Play(track);
         }
 
         #region MouseDoubleClickCommand
@@ -112,7 +116,7 @@ namespace Lyra.ViewModels
 
         private void MouseDoubleClick(TrackViewModel parameter)
         {
-            this.PlayerControlViewModel.Play(parameter);
+            this.Play(parameter);
         }
 
         #endregion

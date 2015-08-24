@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 using Livet;
 using Livet.Commands;
 
+using Lyra.Extensions;
 using Lyra.Models;
 using Lyra.Models.Audio;
 
@@ -13,6 +15,8 @@ namespace Lyra.ViewModels
     public class PlayerControlViewModel : ViewModel
     {
         private readonly BassPlayer _player;
+
+        private readonly MainWindowViewModel _viewModel;
 
         private float _tempVol;
 
@@ -133,10 +137,11 @@ namespace Lyra.ViewModels
 
         #endregion
 
-        public PlayerControlViewModel()
+        public PlayerControlViewModel(MainWindowViewModel viewModel)
         {
-            this._player = new BassPlayer();
-            this.CompositeDisposable.Add(this._player);
+            this._viewModel = viewModel;
+
+            this._player = new BassPlayer().AddTo(this);
 
             // ダミー
             this.PlayingTrack = new TrackViewModel(new DummyTrack());
@@ -146,8 +151,7 @@ namespace Lyra.ViewModels
 
             // タイマー開始
             var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
-            var subscriber = timer.Subscribe(_ => this.UpdateTick());
-            this.CompositeDisposable.Add(subscriber);
+            timer.Subscribe(_ => this.UpdateTick()).AddTo(this);
         }
 
         private void UpdateTick()
@@ -190,8 +194,26 @@ namespace Lyra.ViewModels
 
         public ViewModelCommand NextCommand => _NextCommand ?? (_NextCommand = new ViewModelCommand(Next));
 
+        // To Model？
         private void Next()
         {
+            if (this.CanStop())
+                this.Stop();
+
+            var i =
+                this._viewModel.TrackListViewModel.TrackList.Select(
+                    (item, index) => new { Index = index, Id = item.Track.Id })
+                    .First(w => w.Id == this.PlayingTrack.Track.Id).Index;
+            if (++i >= this._viewModel.TrackListViewModel.TrackList.Count)
+                i = 0;
+
+            var track = this._viewModel.TrackListViewModel.TrackList[i];
+            Task.Run(() =>
+            {
+                this._player.Play(track.Track.Path);
+                this.Volume = this._tempVol * 100;
+                this.PlayingTrack = track;
+            });
         }
 
         #endregion
@@ -219,7 +241,7 @@ namespace Lyra.ViewModels
             Task.Run(() =>
             {
                 this._player.Play(this.SelectedTrack.Track.Path);
-                // ボリュームがリセットされるので再度
+                // ボリュームがリセットされるので
                 this.Volume = this._tempVol * 100;
                 this.PlayingTrack = this.SelectedTrack;
             });
