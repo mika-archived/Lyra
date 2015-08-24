@@ -67,7 +67,7 @@
                     BorderBrush="{DynamicResource BorderBrushKey}"
                     BorderThickness="1">
                 <ListView AlternationCount="2"
-                          ItemsSource="{Binding Tracks}"
+                          ItemsSource="{Binding TrackListViewModel.TrackList}"
                           SelectedItem="{Binding SelectedTrack,
                                                  Mode=TwoWay}">
                     <ListView.Resources>

@@ -1,35 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Data.Common;
-
-using Livet;
+﻿using Livet;
 using Livet.Commands;
-
-using Lyra.Models;
-using Lyra.Models.Database;
 
 namespace Lyra.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
         public string Title => "Lyra";
-
-        #region Tracks変更通知プロパティ
-
-        private ObservableCollection<TrackViewModel> _Tracks;
-
-        public ObservableCollection<TrackViewModel> Tracks
-        {
-            get { return _Tracks; }
-            set
-            {
-                if (_Tracks == value)
-                    return;
-                _Tracks = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
 
         #region SelectedTrack変更通知プロパティ
 
@@ -68,6 +44,25 @@ namespace Lyra.ViewModels
 
         #endregion
 
+        #region TrackListViewModel変更通知プロパティ
+
+        private TrackListViewModel _TrackListViewModel;
+
+        public TrackListViewModel TrackListViewModel
+        {
+            get
+            { return _TrackListViewModel; }
+            set
+            {
+                if (_TrackListViewModel == value)
+                    return;
+                _TrackListViewModel = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
         #region StatusBarViewModel変更通知プロパティ
 
         private StatusBarViewModel _StatusBarViewModel;
@@ -89,20 +84,11 @@ namespace Lyra.ViewModels
         public MainWindowViewModel()
         {
             this.PlayerControlViewModel = new PlayerControlViewModel();
-            this.Tracks = new ObservableCollection<TrackViewModel>();
+            this.TrackListViewModel = new TrackListViewModel();
 
-            // <<<Temporary>>>
-            var connection = DbProviderFactories.GetFactory(LyraApp.DatabaseProvider).CreateConnection();
-            connection.ConnectionString = LyraApp.DatabaseConnectionString;
-
-            using (var dbcontext = new AppDbContext(connection))
-            {
-                // LINQ で回すと死ぬ, Include("Album"), Include("Artist") で先に読み込んでおかないと、 Binding 時に Track.Album.Name とかが null になる
-                foreach (var track in dbcontext.Tracks.Include("Album").Include("Artist"))
-                {
-                    Tracks.Add(new TrackViewModel(track));
-                }
-            }
+            // 一応
+            this.CompositeDisposable.Add(this.PlayerControlViewModel);
+            this.CompositeDisposable.Add(this.TrackListViewModel);
         }
 
         public void Initialize()

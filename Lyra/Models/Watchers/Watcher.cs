@@ -1,49 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Data.Common;
+using System.Linq;
 using System.Reactive.Linq;
 
 using Livet;
 
+using Lyra.Models.Database;
+
 namespace Lyra.Models.Watchers
 {
+    public delegate void TracksChangedEventHandler(IReadOnlyCollection<Track> items, NotifyCollectionChangedEventArgs e);
+
     /// <summary>
     /// 一定時間ごとに、フォルダーなどを監視します。
     /// </summary>
-    public abstract class Watcher<T> : NotificationObject, IDisposable
+    public abstract class Watcher : NotificationObject, IDisposable
     {
-        private readonly IDisposable _subscriber;
+        public event TracksChangedEventHandler OnChanged;
+
+        private IObservable<long> _timer;
+
+        private IDisposable _subscriber;
 
         protected string Path { get; private set; }
 
-        #region Items変更通知プロパティ
+        protected ObservableCollection<Track> Items { get; }
 
-        private ObservableCollection<T> _Items;
-
-        public ObservableCollection<T> Items
-        {
-            get
-            { return _Items; }
-            set
-            {
-                if (_Items == value)
-                    return;
-                _Items = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
+        protected AppDbContext Database { get; }
 
         protected Watcher(string path, int interval)
         {
             this.Path = path;
-            this.Items = new ObservableCollection<T>();
-            var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(interval));
-            this._subscriber = timer.Subscribe(_ => this.Tick());
+            this.Items = new ObservableCollection<Track>();
+            this.Items.CollectionChanged += Items_CollectionChanged;
+
+            this._timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(interval));
+
+            var connection = DbProviderFactories.GetFactory(LyraApp.DatabaseProvider).CreateConnection();
+            // ReSharper disable once PossibleNullReferenceException
+            connection.ConnectionString = LyraApp.DatabaseConnectionString;
+
+            this.Database = new AppDbContext(connection);
+            if (this.Database.Locations.Any(w => w.Path == path))
+                return;
+
+            this.Database.Locations.Add(new Location { Path = path });
+            this.Database.SaveChanges();
+        }
+
+        public void Start() => this._subscriber = this._timer.Subscribe(_ => this.Tick());
+
+        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            TracksChangedEventHandler handler = OnChanged;
+            handler?.Invoke(new ReadOnlyCollection<Track>(this.Items), e);
         }
 
         /// <summary>
-        /// 指定した時間ごとに、Watcher&lt;T&gt;から呼び出されます。
+        /// 指定した時間ごとに、Watcherから呼び出されます。
         /// </summary>
         protected abstract void Tick();
 

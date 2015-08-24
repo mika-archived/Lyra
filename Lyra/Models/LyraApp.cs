@@ -88,6 +88,10 @@ namespace Lyra.Models
 
         public static string DatabaseConnectionString => $"Data Source={DatabaseFilePath};foreign keys=true";
 
+        public static int DatabaseUnknownArtist { get; set; }
+
+        public static int DatabaseUnknownAlbum { get; set; }
+
         #endregion
     }
 }

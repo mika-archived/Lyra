@@ -136,6 +136,7 @@ namespace Lyra.ViewModels
         public PlayerControlViewModel()
         {
             this._player = new BassPlayer();
+            this.CompositeDisposable.Add(this._player);
 
             // ダミー
             this.PlayingTrack = new TrackViewModel(new DummyTrack());
@@ -275,11 +276,5 @@ namespace Lyra.ViewModels
         }
 
         #endregion
-
-        protected override void Dispose(bool disposing)
-        {
-            this._player.Dispose();
-            base.Dispose(disposing);
-        }
     }
 }
