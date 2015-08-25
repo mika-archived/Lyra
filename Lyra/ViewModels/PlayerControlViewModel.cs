@@ -241,6 +241,13 @@ namespace Lyra.ViewModels
                 return;
             }
 
+            // ポーズ再生
+            if (this.PlayState == PlayState.Paused)
+            {
+                this._player.Play(this.PlayingTrack.Track);
+                return;
+            }
+
             Task.Run(() =>
             {
                 this._player.Play(this.SelectedTrack.Track);
