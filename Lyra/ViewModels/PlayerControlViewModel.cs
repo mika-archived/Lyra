@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -154,10 +153,8 @@ namespace Lyra.ViewModels
             var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
             timer.Subscribe(_ => this.UpdateTick()).AddTo(this);
 
-            this._player.OnPlayingStreamFinished += (sender, args) =>
-            {
-                Debug.WriteLine("Stream finishded!");
-            };
+            // イベントハンドラ
+            this._player.OnPlayingStreamFinished += (sender, args) => this.Next();
         }
 
         private void UpdateTick()
