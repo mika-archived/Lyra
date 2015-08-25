@@ -1,14 +1,23 @@
 ﻿using System;
 
+using Lyra.Events;
+
 namespace Lyra.Models.Audio
 {
+    public delegate void PlayingStreamFinishedEvent(object sender, PlayingStreamFinishedEventArgs e);
+
     public interface IAudioPlayer : IDisposable
     {
         /// <summary>
+        /// 現在再生中のトラックが終了した時に発生します。
+        /// </summary>
+        event PlayingStreamFinishedEvent OnPlayingStreamFinished;
+
+        /// <summary>
         /// 音声ファイルを再生します。
         /// </summary>
-        /// <param name="path">ファイルパス</param>
-        void Play(string path);
+        /// <param name="track">再生するトラック</param>
+        void Play(Track track);
 
         /// <summary>
         /// 現在再生中のファイルをポーズします。

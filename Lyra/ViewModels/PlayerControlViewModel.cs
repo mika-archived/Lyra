@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -152,6 +153,11 @@ namespace Lyra.ViewModels
             // タイマー開始
             var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
             timer.Subscribe(_ => this.UpdateTick()).AddTo(this);
+
+            this._player.OnPlayingStreamFinished += (sender, args) =>
+            {
+                Debug.WriteLine("Stream finishded!");
+            };
         }
 
         private void UpdateTick()
@@ -182,7 +188,7 @@ namespace Lyra.ViewModels
 
             Task.Run(() =>
             {
-                this._player.Play(trackViewModel.Track.Path);
+                this._player.Play(trackViewModel.Track);
                 this.Volume = this._tempVol * 100;
                 this.PlayingTrack = trackViewModel;
             });
@@ -210,7 +216,7 @@ namespace Lyra.ViewModels
             var track = this._viewModel.TrackListViewModel.TrackList[i];
             Task.Run(() =>
             {
-                this._player.Play(track.Track.Path);
+                this._player.Play(track.Track);
                 this.Volume = this._tempVol * 100;
                 this.PlayingTrack = track;
             });
@@ -240,7 +246,7 @@ namespace Lyra.ViewModels
 
             Task.Run(() =>
             {
-                this._player.Play(this.SelectedTrack.Track.Path);
+                this._player.Play(this.SelectedTrack.Track);
                 // ボリュームがリセットされるので
                 this.Volume = this._tempVol * 100;
                 this.PlayingTrack = this.SelectedTrack;

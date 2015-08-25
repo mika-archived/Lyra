@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Reactive.Linq;
+
+using Lyra.Events;
 
 using Un4seen.Bass;
 
@@ -13,7 +16,10 @@ namespace Lyra.Models.Audio
     {
         private int _handle;
         private float _volume;
-        private string _path;
+        private bool _flag;
+        private Track _track;
+
+        public event PlayingStreamFinishedEvent OnPlayingStreamFinished;
 
         public BassPlayer()
         {
@@ -30,21 +36,35 @@ namespace Lyra.Models.Audio
 
             // Add-on 周り
             Bass.BASS_PluginLoadDirectory(LyraApp.BassNetModuleDir);
+
+            // 終了通知イベント周り
+            this._flag = true;
+
+            // Stream 再生が終了した時だけ Finish 通知を送信。
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(20))
+                .Select(_ => this.PlayState)                        // this.PlayState を 20ms ごとに取得
+                .DistinctUntilChanged()                             // 値が変わったら次へ
+                .Where(_ => !this._flag)                            // かつ Stop() での停止ではない場合は通知。
+                .Where(_ => this.PlayState == PlayState.Stopped)    // this.PlayState が Stopped (停止状態)の場合で、
+                .Repeat()
+                .Subscribe(_ => OnPlayingStreamFinished?.Invoke(this, new PlayingStreamFinishedEventArgs()));
         }
 
         /// <summary>
         /// 音声ファイルを再生します。
-        /// ポーズから再開する場合は、pathはnullもしくは同じものにします。
+        /// ポーズから再開する場合は、Trackはnullもしくは同じものにします。
         /// </summary>
-        /// <param name="path">ファイルパス もしくは 有効な Stream 再生用の URI</param>
-        public void Play(string path = null)
+        /// <param name="track">再生するトラック</param>
+        public void Play(Track track)
         {
             if (this.PlayState == PlayState.Playing)
             {
-                if (this._path == path)
+                if (this._track.Id == track.Id)
                     return;
                 this.Stop();
             }
+
+            var path = track.Path;
 
             // handler
             if (path != null && this.PlayState != PlayState.Paused)
@@ -60,7 +80,8 @@ namespace Lyra.Models.Audio
             }
 
             Bass.BASS_ChannelPlay(this._handle, this.PlayState != PlayState.Paused);
-            this._path = path;
+            this._track = track;
+            this._flag = false;
         }
 
         /// <summary>
@@ -84,6 +105,7 @@ namespace Lyra.Models.Audio
                 return;
 
             Bass.BASS_ChannelStop(this._handle);
+            this._flag = true;
 
             // 再生箇所を初期化
             Bass.BASS_ChannelSetPosition(this._handle, 0.0);
@@ -91,6 +113,7 @@ namespace Lyra.Models.Audio
             // ファイルを開放
             Bass.BASS_StreamFree(this._handle);
 
+            this._track = null;
             this._handle = 0;
         }
 
