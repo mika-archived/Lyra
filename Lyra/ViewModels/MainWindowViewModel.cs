@@ -1,13 +1,31 @@
-﻿using Livet;
+﻿using System;
+using Livet;
 using Livet.Commands;
-
 using Lyra.Extensions;
+using Lyra.Helpers;
 
 namespace Lyra.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
-        public string Title => "Lyra";
+        #region Title変更通知プロパティ
+
+        private string _Title;
+
+        public string Title
+        {
+            get
+            { return _Title; }
+            set
+            {
+                if (_Title == value)
+                    return;
+                _Title = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
 
         #region SelectedTrack変更通知プロパティ
 
@@ -88,6 +106,11 @@ namespace Lyra.ViewModels
             this.PlayerControlViewModel = new PlayerControlViewModel(this).AddTo(this);
             this.TrackListViewModel = new TrackListViewModel().AddTo(this);
             this.StatusBarViewModel = new StatusBarViewModel().AddTo(this);
+
+            this.Title = "Lyra";
+            this.PlayerControlViewModel.OnPropertyChanged(nameof(this.PlayerControlViewModel.PlayingTrack))
+                .Subscribe(_ => this.Title = $"Lyra - {this.PlayerControlViewModel.PlayingTrack.Track.Title}")
+                .AddTo(this);
         }
 
         public void Initialize()

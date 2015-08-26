@@ -154,6 +154,7 @@
     <Compile Include="Converters\VolumeToIconConverter.cs" />
     <Compile Include="Events\PlayingStreamFinishedEventArgs.cs" />
     <Compile Include="Extensions\ViewModelEx.cs" />
+    <Compile Include="Helpers\NotificationHelper.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\Audio\BassPlayer.cs" />

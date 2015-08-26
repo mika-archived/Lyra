@@ -10,6 +10,7 @@
                    xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
                    xmlns:v="clr-namespace:Lyra.Views"
                    xmlns:vm="clr-namespace:Lyra.ViewModels"
+                   Title="{Binding Title}"
                    Width="950"
                    Height="480"
                    MinWidth="600"
