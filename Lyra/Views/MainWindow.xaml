@@ -39,7 +39,7 @@
         <!--  #region CaptionBar  -->
         <DockPanel Grid.Row="0" metro:MetroWindow.IsCaptionBar="True">
             <metro:CaptionIcon>
-                <Image Source="../Resources/icon.png" Style="{DynamicResource CaptionIconStyle}" />
+                <Image Source="../icon.ico" Style="{DynamicResource CaptionIconStyle}" />
             </metro:CaptionIcon>
             <TextBlock Style="{DynamicResource CaptionTextStyle}" Text="{Binding Title}" />
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Livet;
+﻿using Livet;
 using Livet.Commands;
 using Lyra.Extensions;
 using Lyra.Helpers;
@@ -108,8 +107,9 @@ namespace Lyra.ViewModels
             this.StatusBarViewModel = new StatusBarViewModel().AddTo(this);
 
             this.Title = "Lyra";
-            this.PlayerControlViewModel.OnPropertyChanged(nameof(this.PlayerControlViewModel.PlayingTrack))
-                .Subscribe(_ => this.Title = $"Lyra - {this.PlayerControlViewModel.PlayingTrack.Track.Title}")
+            this.PlayerControlViewModel.Subscribe(
+                nameof(this.PlayerControlViewModel.PlayingTrack),
+                _ => this.Title = $"Lyra - {this.PlayerControlViewModel.PlayingTrack.Track.Title}")
                 .AddTo(this);
         }
 

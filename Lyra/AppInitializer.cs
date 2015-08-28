@@ -7,12 +7,15 @@ using System.Linq;
 
 using Lyra.Models;
 using Lyra.Models.Database;
+using Lyra.Views;
 
 namespace Lyra
 {
     public static class AppInitializer
     {
         private static string[] _commandLineArgs;
+
+        private static SplashWindow _splashWindow;
 
         public static void PreInitialize()
         {
@@ -24,6 +27,10 @@ namespace Lyra
             Debug.WriteLine("AppRootDir = " + LyraApp.RootDirectory);
 
             Directory.CreateDirectory(LyraApp.RootDirectory);
+
+            // Show splash window
+            _splashWindow = new SplashWindow();
+            _splashWindow.Show();
 
             InitializeDatabase();
         }
@@ -52,6 +59,7 @@ namespace Lyra
 
         public static void PostInitialize()
         {
+            _splashWindow.Close();
         }
 
         private static void InitializeDatabase()
