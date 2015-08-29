@@ -76,7 +76,7 @@ namespace Lyra.Models.Watchers
                 if (this.Database.Albums.Any(w => w.Title == temp))
                     albumId = this.Database.Albums.Single(w => w.Title == temp).Id;
                 else
-                    albumId = this.Database.Albums.Add(new Album { Title = temp }).Id;
+                    albumId = this.Database.Albums.Add(new Album { Title = temp, Artwork = id3Tag.GetArtwork() }).Id;
             }
             else
                 albumId = LyraApp.DatabaseUnknownAlbum;

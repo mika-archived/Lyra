@@ -92,7 +92,7 @@ namespace Lyra
                     command.CommandText = "CREATE TABLE IF NOT EXISTS Albums(" +
                                           "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                           "Title TEXT UNIQUE," +
-                                          "Artwork TEXT);";
+                                          "Artwork BLOB);"; // Artwork NONE
                     command.ExecuteNonQuery();
 
                     command.CommandText = "CREATE TABLE IF NOT EXISTS Locations(" +

@@ -5,6 +5,7 @@
         Height="256"
         AllowsTransparency="True"
         Background="Transparent"
+        ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None">
     <Grid>

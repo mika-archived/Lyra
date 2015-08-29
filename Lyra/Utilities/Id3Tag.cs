@@ -33,6 +33,13 @@ namespace Lyra.Utilities
             return null;
         }
 
+        public byte[] GetArtwork()
+        {
+            if (this._file.Tag.Pictures.Length > 0)
+                return this._file.Tag.Pictures[0].Data.Data;
+            return null;
+        }
+
         public int GetTrackNumber()
         {
             return (int)this._file.Tag.Track;

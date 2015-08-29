@@ -9,7 +9,7 @@ namespace Lyra.Models
     // +--------------+-----------------------------------+
     // | id           | INTEGER PRIMARY KEY AUTOINCREMENT |
     // | title        | TEXT UNIQUE                       |
-    // | artwork      | TEXT                              |
+    // | artwork      | BLOB                              |
     // +--------------+-----------------------------------+
     public sealed class Album : NotificationObject
     {
@@ -53,9 +53,9 @@ namespace Lyra.Models
 
         #region Artwork変更通知プロパティ
 
-        private string _Artwork;
+        private byte[] _Artwork;
 
-        public string Artwork
+        public byte[] Artwork
         {
             get
             { return _Artwork; }
