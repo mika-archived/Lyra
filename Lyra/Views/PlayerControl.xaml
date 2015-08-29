@@ -21,6 +21,7 @@
             </Style>
             <converters:VolumeToIconConverter x:Key="VolumeToIconConverter" />
             <converters:PlayStateToIconConverter x:Key="PlayStateToIconConverter" />
+            <converters:RepeatModeToIconConverter x:Key="RepeatModeToIconConverter" />
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -30,7 +31,7 @@
 
         <StackPanel Grid.Column="0" Orientation="Horizontal">
             <Button Command="{Binding PreviousCommand}" Content="&#xE100;" />
-            <Button Command="{Binding PlayCommand}" Content="{Binding Path=PlayState, Converter={StaticResource PlayStateToIconConverter}}" />
+            <Button Command="{Binding PlayCommand}" Content="{Binding PlayState, Converter={StaticResource PlayStateToIconConverter}}" />
             <!--  pause  -->
             <!--<Button>&#xE103;</Button>-->
             <Button Command="{Binding StopCommand}" Content="&#xE91F;" />
@@ -120,7 +121,7 @@
 
         <StackPanel Grid.Column="2" Orientation="Horizontal">
             <!--  when button clicked, mute sound  -->
-            <Button Command="{Binding ToggleVolumeCommand}" Content="{Binding Path=Volume, Converter={StaticResource VolumeToIconConverter}}" />
+            <Button Command="{Binding ToggleVolumeCommand}" Content="{Binding Volume, Converter={StaticResource VolumeToIconConverter}}" />
             <Slider Width="100"
                     VerticalAlignment="Center"
                     Maximum="100"
@@ -130,9 +131,7 @@
                     Value="{Binding Volume,
                                     Mode=TwoWay,
                                     UpdateSourceTrigger=PropertyChanged}" />
-            <Button Content="&#xE1CD;" />
-            <!--  repeat once  -->
-            <!-- <Button>&#xE1CC;</Button> -->
+            <Button Command="{Binding ToggleRepeatModeCommand}" Content="{Binding RepeatMode, Converter={StaticResource RepeatModeToIconConverter}}" />
             <Button Content="&#xE14B;" />
         </StackPanel>
     </Grid>

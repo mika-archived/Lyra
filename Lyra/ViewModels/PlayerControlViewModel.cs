@@ -137,6 +137,25 @@ namespace Lyra.ViewModels
 
         #endregion
 
+        #region RepeatMode変更通知プロパティ
+
+        private RepeatMode _RepeatMode;
+
+        public RepeatMode RepeatMode
+        {
+            get
+            { return _RepeatMode; }
+            set
+            {
+                if (_RepeatMode == value)
+                    return;
+                _RepeatMode = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
         public PlayerControlViewModel(MainWindowViewModel viewModel)
         {
             this._viewModel = viewModel;
@@ -146,8 +165,9 @@ namespace Lyra.ViewModels
             // ダミー
             this.PlayingTrack = new TrackViewModel(new DummyTrack());
 
-            // ボリュームは 0.5f (前回の設定から読み込むべき)
+            // 初期値
             this.Volume = 50;
+            this.RepeatMode = RepeatMode.NoRepeat;
 
             // タイマー開始
             var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
@@ -203,9 +223,15 @@ namespace Lyra.ViewModels
             if (this.CanStop())
                 this.Stop();
 
+            if (this.RepeatMode == RepeatMode.RepeatInifinity)
+            {
+                this.Play(this.PlayingTrack);
+                return;
+            }
+
             var i =
                 this._viewModel.TrackListViewModel.TrackList.Select(
-                    (item, index) => new { Index = index, Id = item.Track.Id })
+                    (item, index) => new { Index = index, item.Track.Id })
                     .First(w => w.Id == this.PlayingTrack.Track.Id).Index;
             if (++i >= this._viewModel.TrackListViewModel.TrackList.Count)
                 i = 0;
@@ -305,6 +331,24 @@ namespace Lyra.ViewModels
             }
             else
                 this.Volume = this._tempVol;
+        }
+
+        #endregion
+
+        #region ToggleRepeatModeCommand
+
+        private ViewModelCommand _ToggleRepeatModeCommand;
+
+        public ViewModelCommand ToggleRepeatModeCommand => _ToggleRepeatModeCommand ?? (_ToggleRepeatModeCommand = new ViewModelCommand(ToggleRepeatMode));
+
+        private void ToggleRepeatMode()
+        {
+            if (this.RepeatMode == RepeatMode.NoRepeat)
+                this.RepeatMode = RepeatMode.RepeatOnce;
+            else if (this.RepeatMode == RepeatMode.RepeatOnce)
+                this.RepeatMode = RepeatMode.RepeatInifinity;
+            else
+                this.RepeatMode = RepeatMode.NoRepeat;
         }
 
         #endregion

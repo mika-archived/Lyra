@@ -6,10 +6,10 @@
     /// </summary>
     public static class CloudWatcherProvider
     {
-        public static Watcher Create(string path)
+        public static Watcher Create(string path, int interval = 1000 * 60 * 60)
         {
             if (path.StartsWith("https://api.soundcloud.com"))
-                return new SoundCloudWatcher(path, 1000 * 60 * 10);
+                return new SoundCloudWatcher(path, interval);
             return null;
         }
     }

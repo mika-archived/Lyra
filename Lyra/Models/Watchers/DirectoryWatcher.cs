@@ -15,7 +15,7 @@ namespace Lyra.Models.Watchers
         }
 
         /// <summary>
-        /// 指定した時間ごとに、Watcher&lt;T&gt;から呼び出されます。
+        /// 指定した時間ごとに、Watcherから呼び出されます。
         /// </summary>
         protected override void Tick()
         {
