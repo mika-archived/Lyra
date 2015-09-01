@@ -3,6 +3,7 @@
 using Livet;
 
 using Lyra.Models;
+using Lyra.Models.Audio;
 
 namespace Lyra.ViewModels
 {
@@ -22,9 +23,29 @@ namespace Lyra.ViewModels
             }
         }
 
+        #region PlayState変更通知プロパティ
+
+        private PlayState _PlayState;
+
+        public PlayState PlayState
+        {
+            get
+            { return _PlayState; }
+            set
+            {
+                if (_PlayState == value)
+                    return;
+                _PlayState = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
         public TrackViewModel(Track track)
         {
             this.Track = track;
+            this.PlayState = PlayState.Stopped;
         }
     }
 }

@@ -19,6 +19,9 @@ namespace Lyra.Models.Watchers
         /// </summary>
         protected override void Tick()
         {
+            if (!Directory.Exists(this.Path))
+                return;
+
             var files = Directory.GetFiles(this.Path, "*", SearchOption.AllDirectories);
             foreach (var file in files)
             {

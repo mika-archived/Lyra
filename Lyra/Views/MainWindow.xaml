@@ -6,6 +6,7 @@
                    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+                   xmlns:ma="clr-namespace:Lyra.Models.Audio"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
                    xmlns:v="clr-namespace:Lyra.Views"
@@ -155,7 +156,7 @@
                         </Style>
                     </ListView.Resources>
                     <ListView.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListViewItem}">
+                        <Style TargetType="{x:Type ListViewItem}" d:DataContext="{d:DesignInstance vm:TrackViewModel}">
                             <Setter Property="Background" Value="{DynamicResource ActiveBackgroundBrushKey}" />
                             <Setter Property="Foreground" Value="{DynamicResource ActiveForegroundBrushKey}" />
                             <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -181,6 +182,14 @@
                                 <Trigger Property="ItemsControl.AlternationIndex" Value="1">
                                     <Setter Property="Background" Value="{DynamicResource SemiactiveBackgroundBrushKey}" />
                                 </Trigger>
+                                <!--  #region Playing Track Highlight  -->
+                                <DataTrigger Binding="{Binding PlayState}" Value="{x:Static ma:PlayState.Playing}">
+                                    <Setter Property="Background" Value="{DynamicResource HighlightBackgroundBrushKey}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding PlayState}" Value="{x:Static ma:PlayState.Paused}">
+                                    <Setter Property="Background" Value="{DynamicResource HighlightBackgroundBrushKey}" />
+                                </DataTrigger>
+                                <!--  #endregion  -->
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Background" Value="{DynamicResource BackgroundBrushKey}" />
                                 </Trigger>
@@ -192,7 +201,7 @@
                             <GridViewColumn Width="35" Header="Info">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Info}">
+                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding PlayState}">
                                             <i:Interaction.Behaviors>
                                                 <behaviors:TextBlockToolTipBehavior />
                                             </i:Interaction.Behaviors>
@@ -211,7 +220,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Width="250" Header="タイトル">
+                            <GridViewColumn Width="305" Header="タイトル">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Title}">
@@ -233,7 +242,7 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Width="250" Header="アルバム">
+                            <GridViewColumn Width="295" Header="アルバム">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Album.Title}">
@@ -248,17 +257,6 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Duration}">
-                                            <i:Interaction.Behaviors>
-                                                <behaviors:TextBlockToolTipBehavior />
-                                            </i:Interaction.Behaviors>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="95" Header="Status">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding Track.Status}">
                                             <i:Interaction.Behaviors>
                                                 <behaviors:TextBlockToolTipBehavior />
                                             </i:Interaction.Behaviors>

@@ -208,6 +208,7 @@ namespace Lyra.ViewModels
                 this._player.Play(trackViewModel.Track);
                 this.Volume = this._tempVol * 100;
                 this.PlayingTrack = trackViewModel;
+                this.PlayingTrack.PlayState = PlayState.Playing;
             });
         }
 
@@ -242,6 +243,7 @@ namespace Lyra.ViewModels
                 this._player.Play(track.Track);
                 this.Volume = this._tempVol * 100;
                 this.PlayingTrack = track;
+                this.PlayingTrack.PlayState = PlayState.Playing;
             });
         }
 
@@ -264,6 +266,7 @@ namespace Lyra.ViewModels
             if (this.PlayState == PlayState.Playing)
             {
                 this._player.Pause();
+                this.PlayingTrack.PlayState = PlayState.Paused;
                 return;
             }
 
@@ -271,6 +274,7 @@ namespace Lyra.ViewModels
             if (this.PlayState == PlayState.Paused)
             {
                 this._player.Play(this.PlayingTrack.Track);
+                this.PlayingTrack.PlayState = PlayState.Playing;
                 return;
             }
 
@@ -280,6 +284,7 @@ namespace Lyra.ViewModels
                 // ボリュームがリセットされるので
                 this.Volume = this._tempVol * 100;
                 this.PlayingTrack = this.SelectedTrack;
+                this.PlayingTrack.PlayState = PlayState.Playing;
             });
         }
 
@@ -299,6 +304,8 @@ namespace Lyra.ViewModels
         private void Stop()
         {
             this._player.Stop();
+            this.PlayingTrack.PlayState = PlayState.Stopped;
+            this.PlayingTrack = null;
         }
 
         #endregion

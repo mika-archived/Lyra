@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-using Livet;
+﻿using Livet;
 
 namespace Lyra.Models
 {
@@ -93,6 +91,7 @@ namespace Lyra.Models
 
         #endregion
 
+        // FOREIGN KEY REFERENCES artists(id)
         public int ArtistId { get; set; }
 
         #region Artist変更通知プロパティ
@@ -114,6 +113,7 @@ namespace Lyra.Models
 
         #endregion
 
+        // FOREIGN KEY REFERENCES akbums(id)
         public int AlbumId { get; set; }
 
         #region Album変更通知プロパティ
@@ -150,48 +150,6 @@ namespace Lyra.Models
                 if (_Duration == value)
                     return;
                 _Duration = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
-
-        // ------------------------------------------------------------
-
-        #region Status変更通知プロパティ
-
-        private TrackState _Status;
-
-        [NotMapped]
-        public TrackState Status
-        {
-            get
-            { return _Status; }
-            set
-            {
-                if (_Status == value)
-                    return;
-                _Status = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
-
-        #region Info変更通知プロパティ
-
-        private TrackInfo _Info;
-
-        [NotMapped]
-        public TrackInfo Info
-        {
-            get
-            { return _Info; }
-            set
-            {
-                if (_Info == value)
-                    return;
-                _Info = value;
                 RaisePropertyChanged();
             }
         }

@@ -8,13 +8,11 @@ namespace Lyra.Models
         public DummyTrack()
         {
             this.Id = -1;
-            this.Info = TrackInfo.Local;
             this.Number = 0;
             this.Title = "No Title";
             this.Artist = new Artist { Id = -1, Name = "No Title" };
             this.Album = new Album { Id = -1, Title = "No Title", Artwork = null };
             this.Duration = 0;
-            this.Status = TrackState.Local;
             this.Path = null;
         }
     }
