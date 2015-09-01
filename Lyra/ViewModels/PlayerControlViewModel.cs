@@ -19,6 +19,7 @@ namespace Lyra.ViewModels
         private readonly MainWindowViewModel _viewModel;
 
         private float _tempVol;
+        private bool _isMute;
 
         #region SelectedTrack変更通知プロパティ
 
@@ -111,6 +112,10 @@ namespace Lyra.ViewModels
                     return;
                 this._player.Volume = value / 100;
                 this._tempVol = value / 100;
+                if (Math.Abs(this._tempVol) <= 0)
+                    this._isMute = true;
+                else
+                    this._isMute = false;
                 RaisePropertyChanged();
             }
         }
@@ -168,6 +173,7 @@ namespace Lyra.ViewModels
             // 初期値
             this.Volume = 50;
             this.RepeatMode = RepeatMode.NoRepeat;
+            this._isMute = false;
 
             // タイマー開始
             var timer = Observable.Timer(TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
@@ -206,7 +212,10 @@ namespace Lyra.ViewModels
             Task.Run(() =>
             {
                 this._player.Play(trackViewModel.Track);
-                this.Volume = this._tempVol * 100;
+                if (this._isMute)
+                    this.Volume = 0;
+                else
+                    this.Volume = this._tempVol * 100;
                 this.PlayingTrack = trackViewModel;
                 this.PlayingTrack.PlayState = PlayState.Playing;
             });
@@ -282,7 +291,10 @@ namespace Lyra.ViewModels
             {
                 this._player.Play(this.SelectedTrack.Track);
                 // ボリュームがリセットされるので
-                this.Volume = this._tempVol * 100;
+                if (this._isMute)
+                    this.Volume = 0;
+                else
+                    this.Volume = this._tempVol * 100;
                 this.PlayingTrack = this.SelectedTrack;
                 this.PlayingTrack.PlayState = PlayState.Playing;
             });
@@ -331,10 +343,11 @@ namespace Lyra.ViewModels
         private void ToggleVolume()
         {
             var temp = this.Volume;
+            this._isMute = !this._isMute;
             if (Math.Abs(this.Volume) > 0)
             {
                 this.Volume = 0;
-                this._tempVol = temp;
+                this._tempVol = temp / 100;
             }
             else
                 this.Volume = this._tempVol;
