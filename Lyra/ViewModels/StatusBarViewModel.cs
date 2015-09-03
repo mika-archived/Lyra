@@ -1,4 +1,8 @@
-﻿using Livet;
+﻿using System.Text;
+
+using Livet;
+
+using Lyra.Models.Audio;
 
 namespace Lyra.ViewModels
 {
@@ -26,6 +30,24 @@ namespace Lyra.ViewModels
         public StatusBarViewModel()
         {
             this.StatusMessage = "準備完了";
+        }
+
+        public void SetStatusMessage(PlayerControlViewModel viewModel)
+        {
+            if (viewModel.PlayState == PlayState.Stopped)
+            {
+                this.StatusMessage = "準備完了";
+                return;
+            }
+
+            var sb = new StringBuilder();
+            if (viewModel.PlayState == PlayState.Playing)
+                sb.Append("再生中");
+            else
+                sb.Append("一時停止中");
+            sb.Append(" : ");
+            sb.Append($"{viewModel.PlayingTrack.Track.Title} ({viewModel.PlayingTrack.Track.Artist.Name} / {viewModel.PlayingTrack.Track.Album.Title})");
+            this.StatusMessage = sb.ToString();
         }
     }
 }

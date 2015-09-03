@@ -114,6 +114,9 @@ namespace Lyra.ViewModels
                 .Where(_ => this.PlayerControlViewModel.PlayingTrack != null)
                 .Subscribe(_ => this.Title = $"Lyra - {this.PlayerControlViewModel.PlayingTrack.Track.Title}")
                 .AddTo(this);
+
+            this.PlayerControlViewModel.Subscribe(nameof(this.PlayerControlViewModel.PlayState),
+                _ => this.StatusBarViewModel.SetStatusMessage(this.PlayerControlViewModel)).AddTo(this);
         }
 
         public void Initialize()
