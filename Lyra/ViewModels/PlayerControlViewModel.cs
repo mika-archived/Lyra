@@ -54,6 +54,7 @@ namespace Lyra.ViewModels
                 if (_PlayingTrack == value)
                     return;
                 _PlayingTrack = value;
+                this.NextCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged();
             }
         }
@@ -225,13 +226,18 @@ namespace Lyra.ViewModels
 
         private ViewModelCommand _NextCommand;
 
-        public ViewModelCommand NextCommand => _NextCommand ?? (_NextCommand = new ViewModelCommand(Next));
+        public ViewModelCommand NextCommand => _NextCommand ?? (_NextCommand = new ViewModelCommand(Next, CanNext));
+
+        private bool CanNext()
+        {
+            return this.PlayingTrack != null && !(this.PlayingTrack.Track is DummyTrack);
+        }
 
         // To Model？
         private void Next()
         {
-            if (this.CanStop())
-                this.Stop();
+            var playedTrackId = this.PlayingTrack.Track.Id;
+            this.Stop();
 
             if (this.RepeatMode == RepeatMode.RepeatInifinity)
             {
@@ -242,18 +248,12 @@ namespace Lyra.ViewModels
             var i =
                 this._viewModel.TrackListViewModel.TrackList.Select(
                     (item, index) => new { Index = index, item.Track.Id })
-                    .First(w => w.Id == this.PlayingTrack.Track.Id).Index;
+                    .First(w => w.Id == playedTrackId).Index;
             if (++i >= this._viewModel.TrackListViewModel.TrackList.Count)
                 i = 0;
 
             var track = this._viewModel.TrackListViewModel.TrackList[i];
-            Task.Run(() =>
-            {
-                this._player.Play(track.Track);
-                this.Volume = this._tempVol * 100;
-                this.PlayingTrack = track;
-                this.PlayingTrack.PlayState = PlayState.Playing;
-            });
+            this.Play(track);
         }
 
         #endregion
@@ -286,18 +286,7 @@ namespace Lyra.ViewModels
                 this.PlayingTrack.PlayState = PlayState.Playing;
                 return;
             }
-
-            Task.Run(() =>
-            {
-                this._player.Play(this.SelectedTrack.Track);
-                // ボリュームがリセットされるので
-                if (this._isMute)
-                    this.Volume = 0;
-                else
-                    this.Volume = this._tempVol * 100;
-                this.PlayingTrack = this.SelectedTrack;
-                this.PlayingTrack.PlayState = PlayState.Playing;
-            });
+            this.Play(this.SelectedTrack);
         }
 
         #endregion
@@ -318,6 +307,7 @@ namespace Lyra.ViewModels
             this._player.Stop();
             this.PlayingTrack.PlayState = PlayState.Stopped;
             this.PlayingTrack = null;
+            this.PlayState = this._player.PlayState;
         }
 
         #endregion
