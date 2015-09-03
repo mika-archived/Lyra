@@ -55,6 +55,7 @@ namespace Lyra.ViewModels
                     return;
                 _PlayingTrack = value;
                 this.NextCommand.RaiseCanExecuteChanged();
+                this.PreviousCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged();
             }
         }
@@ -316,10 +317,27 @@ namespace Lyra.ViewModels
 
         private ViewModelCommand _PreviousCommand;
 
-        public ViewModelCommand PreviousCommand => _PreviousCommand ?? (_PreviousCommand = new ViewModelCommand(Previous));
+        public ViewModelCommand PreviousCommand => _PreviousCommand ?? (_PreviousCommand = new ViewModelCommand(Previous, CanPrevious));
+
+        private bool CanPrevious()
+        {
+            return this.PlayingTrack != null && !(this.PlayingTrack.Track is DummyTrack);
+        }
 
         private void Previous()
         {
+            var playedTrackId = this.PlayingTrack.Track.Id;
+            this.Stop();
+
+            var i =
+                this._viewModel.TrackListViewModel.TrackList.Select(
+                    (item, index) => new { Index = index, item.Track.Id })
+                    .First(w => w.Id == playedTrackId).Index;
+            if (--i < 0)
+                i = this._viewModel.TrackListViewModel.TrackList.Count - 1;
+
+            var track = this._viewModel.TrackListViewModel.TrackList[i];
+            this.Play(track);
         }
 
         #endregion
