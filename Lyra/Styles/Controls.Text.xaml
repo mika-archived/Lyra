@@ -23,4 +23,15 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="IconTextStyle"
+           BasedOn="{StaticResource DefaultTextStyle}"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily">
+            <Setter.Value>
+                <!--  Segoe MDL2 Assets is available on Windows 10. Segoe UI Symbol for Windows 8/8.1 (Legacy)  -->
+                <FontFamily>Segoe MDL2 Assets, Segoe UI Symbol</FontFamily>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

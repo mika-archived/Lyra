@@ -167,6 +167,7 @@
     <Compile Include="Models\Database\AppDbContext.cs" />
     <Compile Include="Models\DummyTrack.cs" />
     <Compile Include="Models\Format\FileFormat.cs" />
+    <Compile Include="Models\IconType.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\LyraApp.cs" />
     <Compile Include="Models\RepeatMode.cs" />

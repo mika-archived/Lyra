@@ -20,7 +20,6 @@
                 <Setter Property="FontSize" Value="24" />
             </Style>
             <converters:VolumeToIconConverter x:Key="VolumeToIconConverter" />
-            <converters:PlayStateToIconConverter x:Key="PlayStateToIconConverter" />
             <converters:RepeatModeToIconConverter x:Key="RepeatModeToIconConverter" />
         </Grid.Resources>
         <Grid.ColumnDefinitions>

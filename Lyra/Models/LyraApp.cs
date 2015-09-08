@@ -76,7 +76,7 @@ namespace Lyra.Models
 
         public static string RootDirectory => IsPortable
             ? Path.Combine(Directory.GetCurrentDirectory(), "apps")
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "mikazuki.tk", "Lyra");
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "mkzk.xyz", "Lyra");
 
         public static string DatabaseFilePath => Path.Combine(RootDirectory, "application.db");
 

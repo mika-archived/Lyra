@@ -24,11 +24,29 @@ namespace Lyra.Converters
             if (!(value is PlayState))
                 return null;
 
-            var state = (PlayState)value;
-            if (state == PlayState.Playing)
-                return LyraApp.ButtonPause;
+            IconType type;
+            if (!(parameter is IconType))
+                type = IconType.Player;
             else
-                return LyraApp.ButtonPlay;
+                type = (IconType)parameter;
+
+            var state = (PlayState)value;
+            if (type == IconType.Player)
+            {
+                if (state == PlayState.Playing)
+                    return LyraApp.ButtonPause;
+                else
+                    return LyraApp.ButtonPlay;
+            }
+            else
+            {
+                if (state == PlayState.Paused)
+                    return LyraApp.ButtonPause;
+                else if (state == PlayState.Playing)
+                    return LyraApp.ButtonPlay;
+                else
+                    return null;
+            }
         }
 
         /// <summary>

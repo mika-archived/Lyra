@@ -7,6 +7,7 @@
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
                    xmlns:ma="clr-namespace:Lyra.Models.Audio"
+                   xmlns:m="clr-namespace:Lyra.Models"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
                    xmlns:v="clr-namespace:Lyra.Views"
@@ -198,10 +199,10 @@
                     </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView d:DataContext="{d:DesignInstance vm:TrackViewModel}">
-                            <GridViewColumn Width="35" Header="Info">
+                            <GridViewColumn Width="25">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Style="{StaticResource DefaultTextStyle}" Text="{Binding PlayState}">
+                                        <TextBlock Style="{StaticResource IconTextStyle}" Text="{Binding PlayState, Converter={StaticResource PlayStateToIconConverter}, ConverterParameter={x:Static m:IconType.List}}">
                                             <i:Interaction.Behaviors>
                                                 <behaviors:TextBlockToolTipBehavior />
                                             </i:Interaction.Behaviors>
