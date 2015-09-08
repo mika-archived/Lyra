@@ -178,7 +178,7 @@
     <Compile Include="Models\Watchers\CloudWatcherProvider.cs" />
     <Compile Include="Models\Watchers\SoundCloudWatcher.cs" />
     <Compile Include="Models\Watchers\Watcher.cs" />
-    <Compile Include="Models\Format\Mp3.cs" />
+    <Compile Include="Models\Format\TagReader.cs" />
     <Compile Include="ViewModels\PlayerControlViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\TrackListViewModel.cs" />

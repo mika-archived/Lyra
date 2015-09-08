@@ -3,13 +3,14 @@
 namespace Lyra.Models.Format
 {
     /// <summary>
-    /// Read tagging info from  *.mp3 files.
+    /// Read tagging info.
+    /// See also: https://github.com/mono/taglib-sharp/tree/master/src/TagLib
     /// </summary>
-    public class Mp3 : FileFormat
+    public class TagReader : FileFormat
     {
         private readonly File _file;
 
-        public Mp3(string path)
+        public TagReader(string path)
         {
             this._file = File.Create(path);
             // Debug.WriteLine($"Read a file {{{path}}}. Tagging by {this._file.TagTypes}");

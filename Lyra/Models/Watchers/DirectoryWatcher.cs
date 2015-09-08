@@ -40,8 +40,12 @@ namespace Lyra.Models.Watchers
 
                 switch (ext)
                 {
+                    case ".asf":
                     case ".mp3":
-                        ff = new Mp3(file);
+                    case ".mp4":
+                    case ".ogg":
+                    case ".wma":
+                        ff = new TagReader(file);
                         break;
                 }
 
