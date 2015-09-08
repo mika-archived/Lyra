@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
-using Lyra.Utilities;
+using Lyra.Models.Format;
 
 namespace Lyra.Models.Watchers
 {
@@ -34,20 +35,24 @@ namespace Lyra.Models.Watchers
                     continue;
                 }
 
-                // ID3タグ、ディレクトリパスやファイル名などから、楽曲名を推測
-                // それでもダメなら GracenoteとかFreeDBになげる
                 var ext = System.IO.Path.GetExtension(file);
+                FileFormat ff = null;
 
                 switch (ext)
                 {
-                    #region *.mp3
-
                     case ".mp3":
-                        this.InsertMp3(file);
+                        ff = new Mp3(file);
                         break;
-
-                        #endregion
                 }
+
+                // Do not support
+                if (ff == null)
+                    continue;
+
+                if (ff.IsAvailableTags())
+                    this.Insert(ff, file);
+                else
+                    this.Insert(file);
 
                 t = Database.Tracks.Include("Album").Include("Artist").SingleOrDefault(w => w.Path == file);
                 if (t != null)
@@ -57,13 +62,12 @@ namespace Lyra.Models.Watchers
             // Tick finished
         }
 
-        private void InsertMp3(string file)
+        private void Insert(FileFormat iif, string file)
         {
-            var id3Tag = new Id3Tag(file);
             int artistId;
-            if (id3Tag.GetArtist() != null)
+            if (iif.GetArtist() != null)
             {
-                var temp = id3Tag.GetArtist();
+                var temp = iif.GetArtist();
                 if (this.Database.Artists.Any(w => w.Name == temp))
                     artistId = this.Database.Artists.Single(w => w.Name == temp).Id;
                 else
@@ -73,13 +77,13 @@ namespace Lyra.Models.Watchers
                 artistId = LyraApp.DatabaseUnknownArtist;
 
             int albumId;
-            if (id3Tag.GetAlbum() != null)
+            if (iif.GetAlbum() != null)
             {
-                var temp = id3Tag.GetAlbum();
+                var temp = iif.GetAlbum();
                 if (this.Database.Albums.Any(w => w.Title == temp))
                     albumId = this.Database.Albums.Single(w => w.Title == temp).Id;
                 else
-                    albumId = this.Database.Albums.Add(new Album { Title = temp, Artwork = id3Tag.GetArtwork() }).Id;
+                    albumId = this.Database.Albums.Add(new Album { Title = temp, Artwork = iif.GetArtwork() }).Id;
             }
             else
                 albumId = LyraApp.DatabaseUnknownAlbum;
@@ -87,15 +91,22 @@ namespace Lyra.Models.Watchers
             var track = new Track
             {
                 Path = file,
-                Number = id3Tag.GetTrackNumber(),
-                Title = id3Tag.GetTitle(),
+                Number = iif.GetTrackNumber(),
+                Title = iif.GetTitle(),
                 ArtistId = artistId,
                 AlbumId = albumId,
-                Duration = id3Tag.GetDuration()
+                Duration = iif.GetDuration()
             };
 
             this.Database.Tracks.Add(track);
             this.Database.SaveChanges();
+        }
+
+        // タグから取れなかったので、ディレクトリ名などから取得を試みる。
+        private void Insert(string file)
+        {
+            // ~\{Artist}\{Album}\{Track}-{Title}.{ext}
+            var regex = new Regex(@"\\(?<artist>[\w\s]*)\\(?<album>[\w\s]*)\\(?<track>\d*)-(?<title>.*)\.(?<ext>.*)$");
         }
     }
 }
