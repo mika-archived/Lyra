@@ -10,12 +10,12 @@ namespace Lyra.Models.Format
     {
         private readonly File _file;
 
-        public TagReader(string path) : base(path)
+        public TagReader(string path)
         {
             this._file = File.Create(path);
         }
 
-        public TagReader(string path, string mime) : base(path)
+        public TagReader(string path, string mime)
         {
             this._file = File.Create(path, mime, ReadStyle.Average);
         }

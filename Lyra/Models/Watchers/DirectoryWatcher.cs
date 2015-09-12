@@ -1,7 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
+using Lyra.Extensions;
 using Lyra.Models.Format;
 
 namespace Lyra.Models.Watchers
@@ -11,6 +12,9 @@ namespace Lyra.Models.Watchers
     /// </summary>
     public class DirectoryWatcher : Watcher
     {
+        // 置き換えよう正規表現
+        private static Regex ReplaceChars => new Regex(@"[\p{M}\p{P}\p{S}\p{Z}\p{S}]*");
+
         public DirectoryWatcher(string path) : base(path, 1000 * 10)
         {
         }
@@ -60,7 +64,12 @@ namespace Lyra.Models.Watchers
                 if (ff.IsAvailableTags())
                     this.Insert(ff, file);
                 else
-                    this.Insert(file);
+                {
+                    ff = new UnReadableFormat(ff, file);
+                    if (!ff.IsAvailableTags())
+                        throw new NotSupportedException("サポートされていない形式です。");
+                    this.Insert(ff, file);
+                }
 
                 t = Database.Tracks.Include("Album").Include("Artist").SingleOrDefault(w => w.Path == file);
                 if (t != null)
@@ -73,13 +82,27 @@ namespace Lyra.Models.Watchers
         private void Insert(FileFormat iif, string file)
         {
             int artistId;
+            string temp;
             if (iif.GetArtist() != null)
             {
-                var temp = iif.GetArtist();
+                temp = iif.GetArtist();
                 if (this.Database.Artists.Any(w => w.Name == temp))
                     artistId = this.Database.Artists.Single(w => w.Name == temp).Id;
                 else
-                    artistId = this.Database.Artists.Add(new Artist { Name = temp }).Id;
+                {
+                    if (iif is UnReadableFormat)
+                    {
+                        // 類似検索
+                        var list =
+                            this.Database.Artists.ToList().Select(w => new { Name = w.Name.Replace(ReplaceChars, ""), w.Id }).ToList();
+                        if (list.Any(w => w.Name == temp.Replace(ReplaceChars, "")))
+                            artistId = list.Single(w => w.Name == temp.Replace(ReplaceChars, "")).Id;
+                        else
+                            artistId = this.Database.Artists.Add(new Artist { Name = temp }).Id;
+                    }
+                    else
+                        artistId = this.Database.Artists.Add(new Artist { Name = temp }).Id;
+                }
             }
             else
                 artistId = LyraApp.DatabaseUnknownArtist;
@@ -87,11 +110,24 @@ namespace Lyra.Models.Watchers
             int albumId;
             if (iif.GetAlbum() != null)
             {
-                var temp = iif.GetAlbum();
+                temp = iif.GetAlbum();
                 if (this.Database.Albums.Any(w => w.Title == temp))
                     albumId = this.Database.Albums.Single(w => w.Title == temp).Id;
                 else
-                    albumId = this.Database.Albums.Add(new Album { Title = temp, Artwork = iif.GetArtwork() }).Id;
+                {
+                    if (iif is UnReadableFormat)
+                    {
+                        // 類似検索
+                        var list =
+                            this.Database.Albums.ToList().Select(w => new { Title = w.Title.Replace(ReplaceChars, ""), w.Id }).ToList();
+                        if (list.Any(w => w.Title == temp.Replace(ReplaceChars, "")))
+                            albumId = list.Single(w => w.Title == temp.Replace(ReplaceChars, "")).Id;
+                        else
+                            albumId = this.Database.Albums.Add(new Album { Title = temp }).Id;
+                    }
+                    else
+                        albumId = this.Database.Albums.Add(new Album { Title = temp }).Id;
+                }
             }
             else
                 albumId = LyraApp.DatabaseUnknownAlbum;
@@ -108,13 +144,6 @@ namespace Lyra.Models.Watchers
 
             this.Database.Tracks.Add(track);
             this.Database.SaveChanges();
-        }
-
-        // タグから取れなかったので、ディレクトリ名などから取得を試みる。
-        private void Insert(string file)
-        {
-            // ~\{Artist}\{Album}\{Track}-{Title}.{ext}
-            var regex = new Regex(@"\\(?<artist>[\w\s]*)\\(?<album>[\w\s]*)\\(?<track>\d*)-(?<title>.*)\.(?<ext>.*)$");
         }
     }
 }

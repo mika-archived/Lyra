@@ -2,18 +2,6 @@
 {
     public abstract class FileFormat
     {
-        protected string Path { get; }
-
-        protected FileFormat()
-        {
-            this.Path = null;
-        }
-
-        protected FileFormat(string path)
-        {
-            this.Path = path;
-        }
-
         public abstract string GetArtist();
 
         public abstract string GetAlbum();

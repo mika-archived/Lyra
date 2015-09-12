@@ -159,6 +159,7 @@
     <Compile Include="Converters\RepeatModeToIconConverter.cs" />
     <Compile Include="Converters\VolumeToIconConverter.cs" />
     <Compile Include="Events\PlayingStreamFinishedEventArgs.cs" />
+    <Compile Include="Extensions\StringEx.cs" />
     <Compile Include="Extensions\ViewModelEx.cs" />
     <Compile Include="Helpers\NotificationHelper.cs" />
     <Compile Include="Models\Album.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Models\DummyTrack.cs" />
     <Compile Include="Models\Format\Audio3Gp.cs" />
     <Compile Include="Models\Format\FileFormat.cs" />
+    <Compile Include="Models\Format\UnReadableFormat.cs" />
     <Compile Include="Models\IconType.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\LyraApp.cs" />
