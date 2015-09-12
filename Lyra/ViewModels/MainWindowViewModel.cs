@@ -3,6 +3,8 @@ using System.Reactive.Linq;
 
 using Livet;
 using Livet.Commands;
+using Livet.Messaging;
+
 using Lyra.Extensions;
 using Lyra.Helpers;
 
@@ -146,6 +148,20 @@ namespace Lyra.ViewModels
         private void MouseDoubleClick(TrackViewModel parameter)
         {
             this.Play(parameter);
+        }
+
+        #endregion
+
+        #region OpenSettingsWindowCommand
+
+        private ViewModelCommand _OpenSettingsWindowCommand;
+
+        public ViewModelCommand OpenSettingsWindowCommand => _OpenSettingsWindowCommand ??
+                                                             (_OpenSettingsWindowCommand = new ViewModelCommand(OpenSettingsWindow));
+
+        private void OpenSettingsWindow()
+        {
+            this.Messenger.Raise(new TransitionMessage(new SettingsWindowViewModel(), "OpenSettingsWindow"));
         }
 
         #endregion

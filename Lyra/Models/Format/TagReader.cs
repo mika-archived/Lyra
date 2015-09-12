@@ -10,10 +10,14 @@ namespace Lyra.Models.Format
     {
         private readonly File _file;
 
-        public TagReader(string path)
+        public TagReader(string path) : base(path)
         {
             this._file = File.Create(path);
-            // Debug.WriteLine($"Read a file {{{path}}}. Tagging by {this._file.TagTypes}");
+        }
+
+        public TagReader(string path, string mime) : base(path)
+        {
+            this._file = File.Create(path, mime, ReadStyle.Average);
         }
 
         public override string GetArtist()

@@ -153,6 +153,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppInitializer.cs" />
+    <Compile Include="Behaviors\ModalWindowBehavior.cs" />
     <Compile Include="Behaviors\TextBlockToolTipBehavior.cs" />
     <Compile Include="Converters\PlayStateToIconConverter.cs" />
     <Compile Include="Converters\RepeatModeToIconConverter.cs" />
@@ -166,11 +167,13 @@
     <Compile Include="Models\Audio\IAudioPlayer.cs" />
     <Compile Include="Models\Database\AppDbContext.cs" />
     <Compile Include="Models\DummyTrack.cs" />
+    <Compile Include="Models\Format\Audio3Gp.cs" />
     <Compile Include="Models\Format\FileFormat.cs" />
     <Compile Include="Models\IconType.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\LyraApp.cs" />
     <Compile Include="Models\RepeatMode.cs" />
+    <Compile Include="Models\Settings\LyraSettings.cs" />
     <Compile Include="Models\Track.cs" />
     <Compile Include="Models\TrackInfo.cs" />
     <Compile Include="Models\TrackState.cs" />
@@ -180,11 +183,15 @@
     <Compile Include="Models\Watchers\Watcher.cs" />
     <Compile Include="Models\Format\TagReader.cs" />
     <Compile Include="ViewModels\PlayerControlViewModel.cs" />
+    <Compile Include="ViewModels\SettingsWindowViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\TrackListViewModel.cs" />
     <Compile Include="ViewModels\TrackViewModel.cs" />
     <Compile Include="Views\PlayerControl.xaml.cs">
       <DependentUpon>PlayerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
@@ -238,6 +245,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SplashWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -285,7 +296,9 @@
     <None Include="Resources\icon.ico" />
     <None Include="Resources\icon.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModels\Settings\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -40,6 +40,10 @@ namespace Lyra.Models.Watchers
 
                 switch (ext)
                 {
+                    case ".3gp":
+                        ff = new Audio3Gp(file);
+                        break;
+
                     case ".asf":
                     case ".mp3":
                     case ".mp4":

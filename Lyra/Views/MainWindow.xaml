@@ -6,8 +6,8 @@
                    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
-                   xmlns:ma="clr-namespace:Lyra.Models.Audio"
                    xmlns:m="clr-namespace:Lyra.Models"
+                   xmlns:ma="clr-namespace:Lyra.Models.Audio"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
                    xmlns:v="clr-namespace:Lyra.Views"
@@ -29,6 +29,9 @@
             <l:LivetCallMethodAction MethodName="UnInitialize" MethodTarget="{Binding}" />
             <l:DataContextDisposeAction />
         </i:EventTrigger>
+        <l:InteractionMessageTrigger MessageKey="OpenSettingsWindow" Messenger="{Binding Messenger}">
+            <l:TransitionInteractionMessageAction Mode="Modal" WindowType="{x:Type v:SettingsWindow}" />
+        </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
 
     <Grid>
@@ -50,7 +53,9 @@
                         DockPanel.Dock="Right"
                         Orientation="Horizontal"
                         WindowChrome.IsHitTestVisibleInChrome="True">
-                <metro:CaptionButton Content="&#xE115;" Style="{DynamicResource CaptionButtonStyle}" />
+                <metro:CaptionButton Command="{Binding OpenSettingsWindowCommand}"
+                                     Content="&#xE115;"
+                                     Style="{DynamicResource CaptionButtonStyle}" />
                 <metro:SystemButtons />
             </StackPanel>
         </DockPanel>
