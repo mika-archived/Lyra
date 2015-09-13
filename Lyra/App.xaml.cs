@@ -30,5 +30,10 @@ namespace Lyra
 
             Environment.Exit(1);
         }
+
+        private void App_OnExit(object sender, ExitEventArgs e)
+        {
+            AppInitializer.UnInitialize();
+        }
     }
 }

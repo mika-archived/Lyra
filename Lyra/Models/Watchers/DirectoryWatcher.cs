@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 using Lyra.Extensions;
 using Lyra.Models.Format;
 
@@ -30,7 +31,7 @@ namespace Lyra.Models.Watchers
             var files = Directory.GetFiles(this.Path, "*", SearchOption.AllDirectories);
             foreach (var file in files)
             {
-                var t = Database.Tracks.Include("Artist").Include("Album").SingleOrDefault(w => w.Path == file);
+                var t = Database.Tracks.Find(w => w.Path == file).FirstOrDefault();
                 if (t != null)
                 {
                     if (this.Items.Contains(t))
@@ -70,80 +71,75 @@ namespace Lyra.Models.Watchers
                         throw new NotSupportedException("サポートされていない形式です。");
                     this.Insert(ff, file);
                 }
-
-                t = Database.Tracks.Include("Album").Include("Artist").SingleOrDefault(w => w.Path == file);
+                this.Database.SaveChanges();
+                t = Database.Tracks.Find(w => w.Path == file).FirstOrDefault();
                 if (t != null)
                     this.Items.Add(t);
             }
-
             // Tick finished
         }
 
         private void Insert(FileFormat iif, string file)
         {
-            int artistId;
-            string temp;
+            Artist artist;
             if (iif.GetArtist() != null)
             {
-                temp = iif.GetArtist();
-                if (this.Database.Artists.Any(w => w.Name == temp))
-                    artistId = this.Database.Artists.Single(w => w.Name == temp).Id;
+                if (this.Database.Artists.Contains(w => w.Name == iif.GetArtist()))
+                    artist = this.Database.Artists.Find(w => w.Name == iif.GetArtist()).First();
                 else
                 {
                     if (iif is UnReadableFormat)
                     {
                         // 類似検索
                         var list =
-                            this.Database.Artists.ToList().Select(w => new { Name = w.Name.Replace(ReplaceChars, ""), w.Id }).ToList();
-                        if (list.Any(w => w.Name == temp.Replace(ReplaceChars, "")))
-                            artistId = list.Single(w => w.Name == temp.Replace(ReplaceChars, "")).Id;
+                            this.Database.Artists.ToEnumerable().ToList();
+                        if (list.Any(w => w.Name.Replace(ReplaceChars, "") == iif.GetArtist().Replace(ReplaceChars, "")))
+                            artist = list.Single(w => w.Name.Replace(ReplaceChars, "") == iif.GetArtist().Replace(ReplaceChars, ""));
                         else
-                            artistId = this.Database.Artists.Add(new Artist { Name = temp }).Id;
+                            artist = this.Database.Artists.Add(new Artist { Name = iif.GetArtist() });
                     }
                     else
-                        artistId = this.Database.Artists.Add(new Artist { Name = temp }).Id;
+                        artist = this.Database.Artists.Add(new Artist { Name = iif.GetArtist() });
                 }
             }
             else
-                artistId = LyraApp.DatabaseUnknownArtist;
+                artist = LyraApp.DatabaseUnknownArtist;
 
-            int albumId;
+            Album album;
             if (iif.GetAlbum() != null)
             {
-                temp = iif.GetAlbum();
-                if (this.Database.Albums.Any(w => w.Title == temp))
-                    albumId = this.Database.Albums.Single(w => w.Title == temp).Id;
+                if (this.Database.Albums.Contains(w => w.Title == iif.GetAlbum()))
+                    album = this.Database.Albums.Find(w => w.Title == iif.GetAlbum()).First();
                 else
                 {
                     if (iif is UnReadableFormat)
                     {
                         // 類似検索
                         var list =
-                            this.Database.Albums.ToList().Select(w => new { Title = w.Title.Replace(ReplaceChars, ""), w.Id }).ToList();
-                        if (list.Any(w => w.Title == temp.Replace(ReplaceChars, "")))
-                            albumId = list.Single(w => w.Title == temp.Replace(ReplaceChars, "")).Id;
+                            this.Database.Albums.ToEnumerable().ToList();
+                        if (list.Any(w => w.Title.Replace(ReplaceChars, "") == iif.GetAlbum().Replace(ReplaceChars, "")))
+                            album = list.Single(w => w.Title.Replace(ReplaceChars, "") == iif.GetAlbum().Replace(ReplaceChars, ""));
                         else
-                            albumId = this.Database.Albums.Add(new Album { Title = temp }).Id;
+                            album = this.Database.Albums.Add(new Album { Title = iif.GetAlbum(), Artwork = iif.GetArtwork() });
                     }
                     else
-                        albumId = this.Database.Albums.Add(new Album { Title = temp }).Id;
+                        album = this.Database.Albums.Add(new Album { Title = iif.GetAlbum(), Artwork = iif.GetArtwork() });
                 }
             }
             else
-                albumId = LyraApp.DatabaseUnknownAlbum;
+                album = LyraApp.DatabaseUnknownAlbum;
 
             var track = new Track
             {
                 Path = file,
                 Number = iif.GetTrackNumber(),
                 Title = iif.GetTitle(),
-                ArtistId = artistId,
-                AlbumId = albumId,
+                Artist = artist,
+                Album = album,
                 Duration = iif.GetDuration()
             };
 
             this.Database.Tracks.Add(track);
-            this.Database.SaveChanges();
         }
     }
 }

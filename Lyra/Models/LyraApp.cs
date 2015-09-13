@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Lyra.Models
 {
@@ -86,11 +88,27 @@ namespace Lyra.Models
 
         public static string DatabaseProvider => "System.Data.SQLite";
 
-        public static string DatabaseConnectionString => $"Data Source={DatabaseFilePath};foreign keys=true";
+        // see also -> http://devlights.hatenablog.com/entry/2014/02/01/151642
+        private static string GetDatabaseOptions()
+        {
+            var dictionary = new Dictionary<string, string>
+            {
+                {"Foreign Keys", "True" },
+                {"Default IsolationLevel", "Serializable" },
+                {"SyncMode", "Off" },
+                {"JournalMode", "Wal" }
+            };
+            var sb = new StringBuilder();
+            foreach (var kvp in dictionary)
+                sb.Append($"{kvp.Key}={kvp.Value};");
+            return sb.ToString();
+        }
 
-        public static int DatabaseUnknownArtist { get; set; }
+        public static string DatabaseConnectionString => $"Data Source={DatabaseFilePath};{GetDatabaseOptions()}";
 
-        public static int DatabaseUnknownAlbum { get; set; }
+        public static Artist DatabaseUnknownArtist { get; set; }
+
+        public static Album DatabaseUnknownAlbum { get; set; }
 
         #endregion
     }

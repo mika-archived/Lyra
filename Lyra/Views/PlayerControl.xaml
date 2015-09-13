@@ -84,7 +84,7 @@
                             <Binding Path="PlayingTrack.Track.Album.Title" />
                         </MultiBinding>
                     </TextBlock.Text>
-                    <TextBlock.ToolTip>
+                    <!--<TextBlock.ToolTip>
                         <TextBlock Foreground="{DynamicResource ActiveForegroundBrushKey}">
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{}{0} ({1} / {2})">
@@ -94,7 +94,10 @@
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
-                    </TextBlock.ToolTip>
+                    </TextBlock.ToolTip>-->
+                    <i:Interaction.Behaviors>
+                        <behaviors:TextBlockToolTipBehavior />
+                    </i:Interaction.Behaviors>
                 </TextBlock>
 
                 <TextBlock Grid.Column="1">

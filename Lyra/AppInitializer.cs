@@ -1,21 +1,24 @@
 ﻿using System;
-using System.Data.Common;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 using Lyra.Models;
-using Lyra.Models.Database;
+using Lyra.Models.Database.Repositories;
 using Lyra.Views;
 
 namespace Lyra
 {
+    public delegate void ApplicationOnExit();
+
     public static class AppInitializer
     {
         private static string[] _commandLineArgs;
 
         private static SplashWindow _splashWindow;
+
+        public static event ApplicationOnExit OnExit;
 
         public static void PreInitialize()
         {
@@ -32,34 +35,33 @@ namespace Lyra
             _splashWindow = new SplashWindow();
             _splashWindow.Show();
 
+            AppDomain.CurrentDomain.SetData("DataDirectory", LyraApp.RootDirectory);
+
             InitializeDatabase();
         }
 
         public static void Initialize()
         {
-            var connection = DbProviderFactories.GetFactory(LyraApp.DatabaseProvider).CreateConnection();
-            // ReSharper disable once PossibleNullReferenceException
-            connection.ConnectionString = LyraApp.DatabaseConnectionString;
+            var dbContext = new AppRepository();
+            if (!dbContext.Artists.Contains(w => w.Name == "Unknown"))
+                LyraApp.DatabaseUnknownArtist = dbContext.Artists.Add(new Artist { Name = "Unknown" });
+            else
+                LyraApp.DatabaseUnknownArtist = dbContext.Artists.Find(w => w.Name == "Unknown").First();
 
-            using (var dbContext = new AppDbContext(connection))
-            {
-                if (!dbContext.Artists.Any(w => w.Name == "Unknown"))
-                    LyraApp.DatabaseUnknownArtist = dbContext.Artists.Add(new Artist { Name = "Unknown" }).Id;
-                else
-                    LyraApp.DatabaseUnknownArtist = dbContext.Artists.Single(w => w.Name == "Unknown").Id;
-
-                if (!dbContext.Albums.Any(w => w.Title == "Unknown"))
-                    LyraApp.DatabaseUnknownAlbum = dbContext.Albums.Add(new Album { Title = "Unknown" }).Id;
-                else
-                    LyraApp.DatabaseUnknownAlbum = dbContext.Albums.Single(w => w.Title == "Unknown").Id;
-
-                dbContext.SaveChanges();
-            }
+            if (!dbContext.Albums.Contains(w => w.Title == "Unknown"))
+                LyraApp.DatabaseUnknownAlbum = dbContext.Albums.Add(new Album { Title = "Unknown" });
+            else
+                LyraApp.DatabaseUnknownAlbum = dbContext.Albums.Find(w => w.Title == "Unknown").First();
         }
 
         public static void PostInitialize()
         {
             _splashWindow.Close();
+        }
+
+        public static void UnInitialize()
+        {
+            OnExit?.Invoke();
         }
 
         private static void InitializeDatabase()

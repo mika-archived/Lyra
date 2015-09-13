@@ -80,15 +80,15 @@
     </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="ReactiveProperty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.2.2.3.1\lib\net45\ReactiveProperty.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.2.4\lib\net45\ReactiveProperty.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ReactiveProperty.DataAnnotations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.2.2.3.1\lib\net45\ReactiveProperty.DataAnnotations.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.2.4\lib\net45\ReactiveProperty.DataAnnotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ReactiveProperty.NET45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.2.2.3.1\lib\net45\ReactiveProperty.NET45.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.2.4\lib\net45\ReactiveProperty.NET45.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -166,7 +166,10 @@
     <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\Audio\BassPlayer.cs" />
     <Compile Include="Models\Audio\IAudioPlayer.cs" />
-    <Compile Include="Models\Database\AppDbContext.cs" />
+    <Compile Include="Models\Database\LocationDbContext.cs" />
+    <Compile Include="Models\Database\Repositories\AppRepository.cs" />
+    <Compile Include="Models\Database\Repositories\DbRepository.cs" />
+    <Compile Include="Models\Database\TrackDbContext.cs" />
     <Compile Include="Models\DummyTrack.cs" />
     <Compile Include="Models\Format\Audio3Gp.cs" />
     <Compile Include="Models\Format\FileFormat.cs" />

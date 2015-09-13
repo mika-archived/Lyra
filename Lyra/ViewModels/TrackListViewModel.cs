@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Data.Common;
 using System.Linq;
 
 using Livet;
 
 using Lyra.Models;
-using Lyra.Models.Database;
+using Lyra.Models.Database.Repositories;
 using Lyra.Models.Watchers;
 
 namespace Lyra.ViewModels
@@ -43,42 +43,43 @@ namespace Lyra.ViewModels
             this._watchers = new List<Watcher>();
             this.TrackList = new ObservableCollection<TrackViewModel>();
 
-            // ここもModelでやった方がいいかも？
-            var connection = DbProviderFactories.GetFactory(LyraApp.DatabaseProvider).CreateConnection();
-            // ReSharper disable once PossibleNullReferenceException
-            connection.ConnectionString = LyraApp.DatabaseConnectionString;
-
-            using (var dbContext = new AppDbContext(connection))
+            foreach (var location in new AppRepository().Locations.ToEnumerable())
             {
-                foreach (var location in dbContext.Locations)
-                {
-                    Watcher watcher;
-                    if (location.Path.StartsWith("http://") || location.Path.StartsWith("https://") ||
-                        location.Path.StartsWith("ftp://"))
-                        watcher = CloudWatcherProvider.Create(location.Path);
-                    else
-                        watcher = new DirectoryWatcher(location.Path);
-                    watcher.OnChanged += Watcher_OnChanged;
-                    watcher.Start();
-                    this.CompositeDisposable.Add(watcher);
-                    this._watchers.Add(watcher);
-                }
+                Watcher watcher;
+                if (location.Path.StartsWith("http://") || location.Path.StartsWith("https://") ||
+                    location.Path.StartsWith("ftp://"))
+                    watcher = CloudWatcherProvider.Create(location.Path);
+                else
+                    watcher = new DirectoryWatcher(location.Path);
+                watcher.OnChanged += Watcher_OnChanged;
+                watcher.Start();
+                this.CompositeDisposable.Add(watcher);
+                this._watchers.Add(watcher);
             }
         }
 
         // Model？
         private void Watcher_OnChanged(IReadOnlyCollection<Track> items, NotifyCollectionChangedEventArgs e)
         {
-            foreach (var track in items)
+            // TODO: マルチスレッドの闇
+            try
             {
-                var viewModel = new TrackViewModel(track);
-                if (this.TrackList.Any(w => w.Track.Id == viewModel.Track.Id))
-                    continue;
-                DispatcherHelper.UIDispatcher.Invoke(() => this.TrackList.Add(viewModel));
-            }
+                foreach (var track in items)
+                {
+                    var viewModel = new TrackViewModel(track);
+                    if (this.TrackList.Any(w => w.Track.Id == viewModel.Track.Id))
+                        continue;
+                    DispatcherHelper.UIDispatcher.Invoke(() => this.TrackList.Add(viewModel));
+                }
 
-            var value = this.TrackList.OrderBy(w => w.Track.Album.Title).ThenBy(w => w.Track.Number);
-            DispatcherHelper.UIDispatcher.Invoke(() => this.TrackList = new ObservableCollection<TrackViewModel>(value));
+                var value = this.TrackList.OrderBy(w => w.Track.Album.Title).ThenBy(w => w.Track.Number);
+                DispatcherHelper.UIDispatcher.Invoke(
+                    () => this.TrackList = new ObservableCollection<TrackViewModel>(value));
+            }
+            catch (InvalidOperationException)
+            {
+                //
+            }
         }
     }
 }
