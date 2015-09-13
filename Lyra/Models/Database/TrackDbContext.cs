@@ -4,7 +4,7 @@ namespace Lyra.Models.Database
 {
     public class TrackDbContext : DbContext
     {
-        public TrackDbContext() : base("ApplicationContext")
+        public TrackDbContext() : base(DatabaseConnectionProvider.GetConnection(), true)
         {
             // Disable Migration by Entity Framework
             System.Data.Entity.Database.SetInitializer<TrackDbContext>(null);

@@ -35,8 +35,6 @@ namespace Lyra
             _splashWindow = new SplashWindow();
             _splashWindow.Show();
 
-            AppDomain.CurrentDomain.SetData("DataDirectory", LyraApp.RootDirectory);
-
             InitializeDatabase();
         }
 

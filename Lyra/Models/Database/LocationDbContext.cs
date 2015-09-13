@@ -4,7 +4,7 @@ namespace Lyra.Models.Database
 {
     public class LocationDbContext : DbContext
     {
-        public LocationDbContext() : base("ApplicationContext")
+        public LocationDbContext() : base(DatabaseConnectionProvider.GetConnection(), true)
         {
             // Disable Migration by Entity Framework
             System.Data.Entity.Database.SetInitializer<LocationDbContext>(null);
