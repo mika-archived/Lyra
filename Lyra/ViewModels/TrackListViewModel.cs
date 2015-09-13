@@ -43,18 +43,21 @@ namespace Lyra.ViewModels
             this._watchers = new List<Watcher>();
             this.TrackList = new ObservableCollection<TrackViewModel>();
 
-            foreach (var location in new AppRepository().Locations.ToEnumerable())
+            using (var repository = new AppRepository())
             {
-                Watcher watcher;
-                if (location.Path.StartsWith("http://") || location.Path.StartsWith("https://") ||
-                    location.Path.StartsWith("ftp://"))
-                    watcher = CloudWatcherProvider.Create(location.Path);
-                else
-                    watcher = new DirectoryWatcher(location.Path);
-                watcher.OnChanged += Watcher_OnChanged;
-                watcher.Start();
-                this.CompositeDisposable.Add(watcher);
-                this._watchers.Add(watcher);
+                foreach (var location in repository.Locations.ToEnumerable())
+                {
+                    Watcher watcher;
+                    if (location.Path.StartsWith("http://") || location.Path.StartsWith("https://") ||
+                        location.Path.StartsWith("ftp://"))
+                        watcher = CloudWatcherProvider.Create(location.Path);
+                    else
+                        watcher = new DirectoryWatcher(location.Path);
+                    watcher.OnChanged += Watcher_OnChanged;
+                    watcher.Start();
+                    this.CompositeDisposable.Add(watcher);
+                    this._watchers.Add(watcher);
+                }
             }
         }
 

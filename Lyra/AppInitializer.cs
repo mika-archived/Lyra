@@ -42,16 +42,18 @@ namespace Lyra
 
         public static void Initialize()
         {
-            var dbContext = new AppRepository();
-            if (!dbContext.Artists.Contains(w => w.Name == "Unknown"))
-                LyraApp.DatabaseUnknownArtist = dbContext.Artists.Add(new Artist { Name = "Unknown" });
-            else
-                LyraApp.DatabaseUnknownArtist = dbContext.Artists.Find(w => w.Name == "Unknown").First();
+            using (var dbContext = new AppRepository())
+            {
+                if (!dbContext.Artists.Contains(w => w.Name == "Unknown"))
+                    LyraApp.DatabaseUnknownArtist = dbContext.Artists.Add(new Artist { Name = "Unknown" });
+                else
+                    LyraApp.DatabaseUnknownArtist = dbContext.Artists.Find(w => w.Name == "Unknown").First();
 
-            if (!dbContext.Albums.Contains(w => w.Title == "Unknown"))
-                LyraApp.DatabaseUnknownAlbum = dbContext.Albums.Add(new Album { Title = "Unknown" });
-            else
-                LyraApp.DatabaseUnknownAlbum = dbContext.Albums.Find(w => w.Title == "Unknown").First();
+                if (!dbContext.Albums.Contains(w => w.Title == "Unknown"))
+                    LyraApp.DatabaseUnknownAlbum = dbContext.Albums.Add(new Album { Title = "Unknown" });
+                else
+                    LyraApp.DatabaseUnknownAlbum = dbContext.Albums.Find(w => w.Title == "Unknown").First();
+            }
         }
 
         public static void PostInitialize()

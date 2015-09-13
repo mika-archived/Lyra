@@ -66,6 +66,7 @@ namespace Lyra.Models.Watchers
         public void Dispose()
         {
             this._subscriber.Dispose();
+            this.Database.Dispose();
         }
     }
 }

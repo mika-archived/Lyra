@@ -1,6 +1,8 @@
-﻿namespace Lyra.Models.Database.Repositories
+﻿using System;
+
+namespace Lyra.Models.Database.Repositories
 {
-    public class AppRepository
+    public class AppRepository : IDisposable
     {
         private readonly TrackDbContext _trackDbContext;
         private readonly LocationDbContext _locationDbContext;
@@ -25,6 +27,12 @@
         {
             this._trackDbContext.SaveChanges();
             this._locationDbContext.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            this._trackDbContext.Dispose();
+            this._locationDbContext.Dispose();
         }
     }
 }
