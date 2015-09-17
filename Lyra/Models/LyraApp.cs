@@ -80,7 +80,9 @@ namespace Lyra.Models
             ? Path.Combine(Directory.GetCurrentDirectory(), "apps")
             : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "mkzk.xyz", "Lyra");
 
-        public static string DatabaseFilePath => Path.Combine(RootDirectory, "application.db");
+        private static string DatabaseFilePath => Path.Combine(RootDirectory, "application.db");
+
+        public static string ConfigurationFilePath => Path.Combine(RootDirectory, "application.config");
 
         #endregion
 
